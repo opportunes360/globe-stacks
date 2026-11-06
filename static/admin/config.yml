@@ -8,7 +8,7 @@ backend:
 
 media_folder: static/uploads
 public_folder: /uploads
-site_url: https://globestacks.com
+site_url: https://globe-stacks.pages.dev
 locale: en
 
 collections:
