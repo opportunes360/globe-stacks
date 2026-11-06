@@ -3,12 +3,12 @@
 # for example:  repo: yourname/globe-stacks
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/globe-stacks
+  repo: opportunes360/globe-stacks
   branch: main
 
 media_folder: static/uploads
 public_folder: /uploads
-site_url: https://globe-stacks.pages.dev
+site_url: https://globestacks.com
 locale: en
 
 collections:
