@@ -1,0 +1,59 @@
+# Editor settings for Globe Stacks (Sveltia CMS).
+# CHANGE the line "repo:" below to your GitHub username and repository name,
+# for example:  repo: yourname/globe-stacks
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/globe-stacks
+  branch: main
+
+media_folder: static/uploads
+public_folder: /uploads
+site_url: https://globe-stacks.pages.dev
+locale: en
+
+collections:
+  - name: scholarships
+    label: Scholarships
+    label_singular: Scholarship
+    folder: content/scholarships
+    create: true
+    extension: md
+    fields:
+      - { name: title, label: Name of the scholarship, widget: string }
+      - { name: country, label: Country, widget: string, hint: "Example: Japan. Use the same spelling every time so the filter works." }
+      - { name: funding, label: Funding type, widget: select, options: [{ label: Fully funded, value: Full }, { label: Partly funded, value: Partial }, { label: Student loan, value: Loan }] }
+      - { name: level, label: Study level, widget: string, default: Undergraduate }
+      - { name: status, label: Status right now, widget: select, options: [{ label: Open now, value: open }, { label: Opens soon, value: upcoming }, { label: Closed for now, value: closed }, { label: Check dates, value: check }], default: check }
+      - { name: deadline, label: Dates and deadline, widget: string, hint: "Write it exactly as on the official page, with the year." }
+      - { name: summary, label: One-sentence summary, widget: text }
+      - { name: who, label: Who can apply, widget: string, required: false }
+      - { name: covers, label: What it covers, widget: string, required: false }
+      - { name: official_link, label: Official link, widget: string, hint: "Start with https://" }
+      - { name: verified, label: Date you last checked the official page, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { name: featured, label: Show on the home page, widget: boolean, default: false }
+      - { name: body, label: Full details, widget: markdown }
+
+  - name: guides
+    label: Guides
+    label_singular: Guide
+    folder: content/guides
+    create: true
+    extension: md
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: category, label: Group, widget: select, options: ["Start here", "Applications", "Documents and travel"] }
+      - { name: order, label: Order in the learning path (1 is first), widget: number, value_type: int, min: 1 }
+      - { name: summary, label: One-sentence summary, widget: text }
+      - { name: verified, label: Date you last checked the facts, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+      - { name: body, label: Guide text, widget: markdown }
+
+  - name: pages
+    label: Pages (About, Contact, Privacy, Disclaimer)
+    label_singular: Page
+    folder: content/pages
+    create: false
+    extension: md
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: summary, label: Short intro, widget: text, required: false }
+      - { name: body, label: Text, widget: markdown }
