@@ -21,7 +21,7 @@ collections:
     fields:
       - { name: title, label: Name of the scholarship, widget: string }
       - { name: country, label: Country, widget: string, hint: "Example: Japan. Use the same spelling every time so the filter works." }
-      - { name: funding, label: Funding type, widget: select, options: [{ label: Fully funded, value: Full }, { label: Partly funded, value: Partial }, { label: Student loan, value: Loan }] }
+      - { name: funding, label: Funding type, widget: select, options: [{ label: Fully funded, value: Full }, { label: Partly funded, value: Partial }] }
       - { name: level, label: Study level, widget: string, default: Undergraduate }
       - { name: status, label: Status right now, widget: select, options: [{ label: Open now, value: open }, { label: Opens soon, value: upcoming }, { label: Closed for now, value: closed }, { label: Check dates, value: check }], default: check }
       - { name: deadline, label: Dates and deadline, widget: string, hint: "Write it exactly as on the official page, with the year." }
