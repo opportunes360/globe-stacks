@@ -262,7 +262,6 @@ function loadCollection(dir) {
 const FUNDING = {
   Full: { label: 'Fully funded', level: 3 },
   Partial: { label: 'Partly funded', level: 2 },
-  Loan: { label: 'Student loan', level: 1 },
 };
 const STATUS = {
   open: ['Open now', 'ok'],
@@ -427,8 +426,7 @@ function build() {
       <p class="hero-links"><a class="btn btn-ghost" href="/guides/">Start with the guides</a><a class="btn btn-ghost" href="/scholarships/">Browse all scholarships</a></p>
     </div>
     <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 420 390" role="img" focusable="false">
-        <g class="slab sl-loan"><path class="face-l" d="M60 330 L210 370 L210 386 L60 346 Z"/><path class="face-r" d="M360 330 L210 370 L210 386 L360 346 Z"/><path class="top" d="M210 290 L360 330 L210 370 L60 330 Z"/></g>
+      <svg viewBox="0 0 420 380" role="img" focusable="false">
         <g class="slab sl-part"><path class="face-l" d="M60 290 L210 330 L210 346 L60 306 Z"/><path class="face-r" d="M360 290 L210 330 L210 346 L360 306 Z"/><path class="top" d="M210 250 L360 290 L210 330 L60 290 Z"/></g>
         <g class="slab sl-full"><path class="face-l" d="M60 250 L210 290 L210 306 L60 266 Z"/><path class="face-r" d="M360 250 L210 290 L210 306 L360 266 Z"/><path class="top" d="M210 210 L360 250 L210 290 L60 250 Z"/></g>
         <g class="globe"><circle cx="210" cy="140" r="84"/><ellipse cx="210" cy="140" rx="36" ry="84"/><path d="M210 56 V224 M126 140 H294 M137 98 H283 M137 182 H283"/></g>
@@ -441,7 +439,6 @@ function build() {
     <span class="legend-title">Reading the stacks</span>
     <span class="legend-item">${meter(3)} Fully funded</span>
     <span class="legend-item">${meter(2)} Partly funded</span>
-    <span class="legend-item">${meter(1)} Student loan</span>
   </div>
 </section>
 
@@ -476,7 +473,7 @@ function build() {
     <dl>
       <dt>It is free.</dt><dd>No sign-up, no fees. If anyone asks you to pay to &ldquo;secure&rdquo; a scholarship, walk away.</dd>
       <dt>It is checked.</dt><dd>We read the official pages ourselves and show the date each page was last checked.</dd>
-      <dt>It is honest.</dt><dd>Fully funded places are competitive. We tell you the odds, and we list partly funded options and loans too.</dd>
+      <dt>It is honest.</dt><dd>Fully funded places are competitive. We tell you the odds, and we list partly funded options too.</dd>
     </dl>
   </div>
 </section>
@@ -499,7 +496,7 @@ function build() {
 
   /* Scholarships index */
   const countries = [...new Set(scholarships.map((s) => s.country))].sort();
-  const fundingsPresent = ['Full', 'Partial', 'Loan'].filter((f) => scholarships.some((s) => s.funding === f));
+  const fundingsPresent = ['Full', 'Partial'].filter((f) => scholarships.some((s) => s.funding === f));
   const statusesPresent = ['open', 'upcoming', 'check', 'closed'].filter((s) => scholarships.some((x) => x.status === s));
   const schBody = `
 <section class="page-head"><div class="wrap">
