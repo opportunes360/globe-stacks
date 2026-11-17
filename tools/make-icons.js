@@ -20,8 +20,8 @@ function svg({ size, radius, scale }) {
 (async () => {
   const browser = await chromium.launch();
   const jobs = [
-    ['icon-192.png', 192, 14, 0.84],
-    ['icon-512.png', 512, 14, 0.84],
+    ['icon-192.png', 192, 0, 0.74],
+    ['icon-512.png', 512, 0, 0.74],
     ['maskable-512.png', 512, 0, 0.62],
     ['apple-touch-icon.png', 180, 0, 0.74],
     ['favicon-32.png', 32, 7, 0.9],
