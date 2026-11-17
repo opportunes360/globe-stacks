@@ -7,15 +7,14 @@ verified: 2026-11-05
 ---
 Many bright students never apply because they think scholarships are only for other people, or because someone told them they must pay to get one. Neither is true. Here is how it really works.
 
-## The three kinds of funding
+## The two kinds of funding
 
 On this site we show funding with a stack of layers. The more layers are filled, the more of your costs are covered.
 
 - **Fully funded (three layers).** Covers tuition and usually housing and a living allowance. Often flights too. These are the most competitive.
 - **Partly funded (two layers).** Covers some costs, such as tuition only, or a percentage. You pay the rest, so check the numbers carefully.
-- **Student loan (one layer).** Money you borrow and repay after you graduate. A loan is not a scholarship, but it can still make study possible. In Tanzania, the main one is HESLB.
 
-> **Honest advice:** fully funded undergraduate places are rare and many people apply. Apply to several options, including partly funded ones and loans, so one "no" does not end your plan.
+> **Honest advice:** fully funded undergraduate places are rare and many people apply. Apply to several options, including partly funded ones, so one "no" does not end your plan.
 
 ## Who gives scholarships
 
