@@ -19,7 +19,7 @@ Keep this file in the project. Upload it with the zip at the start of every new 
 
 ## Status
 - Stage A (loans removed, two funding levels, full-square icons): done and live.
-- Stage B: Stipendium Hungaricum rewritten for Tanzanian students (verified 2026-11-18). Next: the other scholarships one at a time.
+- Stage B: Stipendium Hungaricum and Turkiye Burslari rewritten for Tanzanian students (both verified 2026-11-18; 2027 Turkiye round not yet announced). Next: GKS Korea, MEXT Japan, China CSC, Mastercard Foundation Scholars, one at a time.
 - Later: "my country" filter (needs an eligible_countries field), more scholarships, more guides, Swahili versions.
 
 ## Scholarships on the site (6)
