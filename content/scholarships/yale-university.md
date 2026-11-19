@@ -9,7 +9,7 @@ summary: "Yale's scholarship is need-based aid for every admitted student, whate
 who: "Students of any nationality, including Tanzanians, applying for first-year admission to Yale College. Aid is open to all citizenships and immigration statuses. Asking for aid does not affect your chance of admission."
 covers: "Depends on your family's need. For the highest-need families Yale says the scholarship can cover tuition and fees, housing, food and travel, plus hospital insurance and a 2,000 US dollar start-up grant in the first year. Yale offers no merit scholarships."
 official_link: "https://finaid.yale.edu/apply/prospective"
-verified: 2026-11-18
+verified: 2026-11-19
 featured: false
 ---
 ## What it is
@@ -46,7 +46,7 @@ You can get a personal cost estimate from Yale's calculator: <https://finaid.yal
 
 ## When to apply
 
-As of **18 November 2026**, for study starting in 2027:
+As of **19 November 2026**, for study starting in 2027:
 
 - **Single-Choice Early Action closed on 1 November 2026.** If you have not applied, you cannot use this round.
 - **Regular Decision: 2 January.** The official page does not print the year. It is the round for the 2027 intake. Decisions come in late March and you reply by 1 May.
@@ -80,6 +80,10 @@ Questions about aid can go to: undergrad.fa@yale.edu
 ## Beware of scams
 
 Yale will never ask you to pay to be considered for a scholarship. Only use the web addresses listed here (yale.edu, commonapp.org, coalitionforcollegeaccess.org, collegeboard.org). Read [how scholarships work and how to spot scams](/guides/how-scholarships-work-and-how-to-spot-scams/).
+
+## With 44 days left (as of 19 November 2026)
+
+The Regular Decision deadline is 2 January 2027, which is 44 days away. Yale's recommended date for aid documents is 15 February 2027. Do the slow parts first: your test score, your teachers' recommendation letters and your family's income documents. Do not wait for the last week, because websites can be slow when many students apply at once.
 
 ## Prepare now
 

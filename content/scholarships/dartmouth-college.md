@@ -9,7 +9,7 @@ summary: "Dartmouth's scholarship is need-based aid for every admitted student, 
 who: "Students of any nationality, including Tanzanians, applying for first-year admission to Dartmouth. Aid is only for students who show financial need through the CSS Profile (or the free ISFAA form), and Dartmouth's own pages say financial need is not a factor in the admission decision."
 covers: "Depends on your family's need, and you are also expected to contribute a small amount through summer earnings and a campus job. Dartmouth says it meets 100% of demonstrated need with scholarships and student employment, never a required loan. Dartmouth scholarships range from 1,000 to over 80,000 US dollars a year. Flights are not paid for you."
 official_link: "https://financialaid.dartmouth.edu/apply-aid/prospective-transfer-students/how-apply-aid/international-students"
-verified: 2026-11-18
+verified: 2026-11-19
 featured: false
 ---
 ## What it is
@@ -61,7 +61,7 @@ You can get a personal estimate from Dartmouth's net price calculators: <https:/
 
 ## When to apply
 
-As of **18 November 2026**, for study starting in 2027:
+As of **19 November 2026**, for study starting in 2027:
 
 - **Binding Early Decision closed on 1 November 2026.** If you have not applied, you cannot use this round.
 - **Regular Decision: 1 January.** The official pages do not print the year. It is the round for the 2027 intake. The page says 11:59 p.m. in your local time. The application fee or fee waiver is also due on 1 January. Decisions come in late March or early April and you reply by 1 May.
@@ -115,6 +115,10 @@ Questions about aid can go to: financial.aid@dartmouth.edu
 ## Beware of scams
 
 Dartmouth will never ask you to pay to be considered for a scholarship. Only use the web addresses listed here (dartmouth.edu, commonapp.org, collegeboard.org). Read [how scholarships work and how to spot scams](/guides/how-scholarships-work-and-how-to-spot-scams/).
+
+## With 43 days left (as of 19 November 2026)
+
+The Regular Decision deadline is 1 January 2027, which is 43 days away. Your financial aid documents are due 1 February 2027, 74 days away. Do the slow parts first: your test score, your teachers' recommendation letters and your parents' income and tax documents. Do not wait for the last week, because websites can be slow when many students apply at once.
 
 ## Prepare now
 

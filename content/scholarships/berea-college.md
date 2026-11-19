@@ -9,7 +9,7 @@ summary: "A US college in Kentucky where admitted international students get aid
 who: "International students who finish secondary school with outstanding results, need financial aid and can show an approved English test score. No country list. No one who already has a bachelor's degree."
 covers: "100% of tuition, housing, food and fees. Not covered: personal expenses. You also pay a $2,200 deposit (aid available if you cannot). The page does not say whether flights or the visa fee are covered."
 official_link: "https://www.berea.edu/admissions/admission-information/apply/checklist-items/international-faqs"
-verified: 2026-11-18
+verified: 2026-11-19
 featured: true
 ---
 ## What it is
@@ -86,7 +86,7 @@ The checklist page also lists an optional "personal submission". Berea says to g
 - Berea does not offer family housing or support. Your campus earnings cannot support family at home.
 - Berea only gives a bachelor's degree. If you plan a professional programme afterwards (for example medicine), you must apply separately to that programme after Berea.
 
-## With 12 days left (as of 18 November 2026)
+## With 11 days left (as of 19 November 2026)
 
 Only start this year if you can finish every item by 30 November. The slowest parts are usually the test score, the records and the recommendations. If you do not have a valid English score, plan that first. If you cannot finish in time, use the months before next year's round to prepare: see our guides on [personal statements](/guides/how-to-write-a-personal-statement/), [recommendation letters](/guides/recommendation-letters-and-your-cv/) and [your passport](/guides/getting-your-passport-in-tanzania/).
 
