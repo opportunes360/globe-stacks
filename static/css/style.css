@@ -298,3 +298,9 @@ th { background: var(--tint); }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
 @media print { .site-header, .site-footer, .hero-art, .actions, .pager { display: none; } body { background: #fff; color: #000; } }
+
+/* Deadlines page */
+.dl-date { display: flex; flex-direction: column; gap: 0.15rem; color: var(--ink); }
+.dl-left { font-size: 0.9rem; font-weight: 700; color: var(--primary); }
+.dl-left:empty { display: none; }
+.dl-row[hidden] { display: none; }
