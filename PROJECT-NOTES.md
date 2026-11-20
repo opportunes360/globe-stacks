@@ -85,6 +85,9 @@ Each scholarship form in the editor has a calendar picker **Final application de
 - New round announced: change the `closes` date to the new date, set Status back to Open or Upcoming, and update the "Dates and deadline" text.
 - `content/deadlines.json` is only for extra dates (for example financial-aid forms), "expected" dates, and the "no date yet" list. Seven older scholarships (Berea, UBC, Dartmouth, Yale, Amherst, NYU Abu Dhabi, Reach Oxford) still use `"closes": true` rows there, and that keeps working.
 
+## Look and feel (2026-11-20, "friendly and youthful" polish)
+Same blue identity, warmer accent (orange for urgent days-left chips), rounder shapes, pill buttons, soft cards. Home page: stat pills, "Closing soon" cards (next 3 confirmed final deadlines, days counted in the browser), guides grouped into 3 step cards, scholarship cards. Scholarship pages: chips (funding, status, days left) and the Official page button at the top, facts as cards, "On this page" menu (also on guides). Phone menu fits all four links. No flag icons on purpose (Windows computers do not draw flag emoji). Styles are in `static/css/style.css` (new rules are at the bottom, under "Friendly polish"); pages are built in `build.js`.
+
 ## Site checks done
 2026-11-20: all 40 pages tested on phone (390 px) and desktop. No broken internal links, no browser errors. Fixed: long web addresses and wide tables overflowing on phones. Filters, Deadlines page and install manifest tested. Not tested by Claude: the /admin/ editor sign-in (needs your token), and the installed app on a real phone.
 Known small gap: the scholarship entries have no separate "Sources" list at the end (they cite sources in the text and give the official link). Add one when you next edit an entry.
