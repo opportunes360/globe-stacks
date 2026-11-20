@@ -285,6 +285,12 @@ const STATUS = {
   closed: ['Closed for now', 'closed'],
   check: ['Check dates', 'check'],
 };
+/* Auto-close: a deadlines.json row with "closes": true marks the date after which the scholarship counts as closed. */
+let DL_ROWS = [];
+try { DL_ROWS = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'deadlines.json'), 'utf8')).dates || []; } catch (e) {}
+const TODAY_TZ = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Dar_es_Salaam' }).format(new Date());
+const closesOf = (s) => DL_ROWS.filter((d) => d.slug === s.slug && d.closes === true).map((d) => d.date).sort().pop() || '';
+const effStatus = (s) => (closesOf(s) && closesOf(s) < TODAY_TZ && (s.status === 'open' || s.status === 'upcoming') ? 'closed' : s.status);
 const fundingInfo = (f) => FUNDING[f] || { label: 'Partly funded', level: 2 };
 const statusInfo = (s) => STATUS[s] || STATUS.check;
 
@@ -316,9 +322,10 @@ function shareLink(title, urlPath) {
 
 function scholarshipItem(s) {
   const f = fundingInfo(s.funding);
-  const [stLabel, stCls] = statusInfo(s.status);
+  const st = effStatus(s);
+  const [stLabel, stCls] = statusInfo(st);
   const hay = [s.title, s.country, s.open_to, s.level, s.summary, f.label].join(' ').toLowerCase();
-  return `<article class="row" data-item data-country="${esc(s.country)}" data-funding="${esc(s.funding)}" data-status="${esc(s.status)}" data-eligible="${esc(eligibleAttr(s))}" data-hay="${esc(hay)}">
+  return `<article class="row" data-item data-country="${esc(s.country)}" data-funding="${esc(s.funding)}" data-status="${esc(st)}"${closesOf(s) && st !== 'closed' ? ` data-closes="${closesOf(s)}"` : ''} data-eligible="${esc(eligibleAttr(s))}" data-hay="${esc(hay)}">
   <div class="row-meter" title="${esc(f.label)}">${meter(f.level)}<span>${esc(f.label)}</span></div>
   <div class="row-main">
     <h3><a href="/scholarships/${s.slug}/">${esc(s.title)}</a></h3>
@@ -514,7 +521,7 @@ function build() {
   /* Scholarships index */
   const countries = [...new Set(scholarships.map((s) => s.country))].sort();
   const fundingsPresent = ['Full', 'Partial'].filter((f) => scholarships.some((s) => s.funding === f));
-  const statusesPresent = ['open', 'upcoming', 'check', 'closed'].filter((s) => scholarships.some((x) => x.status === s));
+  const statusesPresent = ['open', 'upcoming', 'check', 'closed'];
   const schBody = `
 <section class="page-head"><div class="wrap">
   <h1>Scholarships</h1>
@@ -582,14 +589,15 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
   /* Scholarship pages */
   for (const s of scholarships) {
     const f = fundingInfo(s.funding);
-    const [stLabel, stCls] = statusInfo(s.status);
+    const st = effStatus(s);
+    const [stLabel, stCls] = statusInfo(st);
     const urlPath = `/scholarships/${s.slug}/`;
     const facts = [
       ['Country', s.country],
       ['Open to', s.open_to],
       ['Funding', `<span class="inline-meter">${meter(f.level)} ${esc(f.label)}</span>`, true],
       ['Level', s.level],
-      ['Status', `<span class="badge ${stCls}">${stLabel}</span>`, true],
+      ['Status', `<span class="badge ${stCls}"${closesOf(s) && st !== 'closed' ? ` data-closes="${closesOf(s)}"` : ''}>${stLabel}</span>`, true],
       ['Dates', s.deadline],
       ['Who can apply', s.who],
       ['What it covers', s.covers],

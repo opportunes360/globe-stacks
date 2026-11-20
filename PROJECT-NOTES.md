@@ -79,6 +79,9 @@ Guides (13): how scholarships work and how to spot scams; how to write a persona
 ## Guides to add later
 Only A9 (Samia Scholarship explained) is left in TASKS.md.
 
+## Automatic closing (added 2026-11-20)
+In `content/deadlines.json`, put `"closes": true` on the ONE row that is a scholarship's final application deadline. After that date (Tanzania time) the site marks it "Closed for now" by itself: on the list, on its page, in the Status filter, and it drops off the Deadlines page. Nothing to do on that day. It only works for rows marked this way (now: Berea, UBC, Dartmouth, Yale, Amherst, NYU Abu Dhabi, Reach Oxford). When a new round is announced: add a new dated row with `"closes": true`, and change the entry's `status` back to `open` or `upcoming` and update its dates text by hand. Scholarships with unconfirmed dates (Hungary, Korea, Japan...) are never auto-closed.
+
 ## Site checks done
 2026-11-20: all 40 pages tested on phone (390 px) and desktop. No broken internal links, no browser errors. Fixed: long web addresses and wide tables overflowing on phones. Filters, Deadlines page and install manifest tested. Not tested by Claude: the /admin/ editor sign-in (needs your token), and the installed app on a real phone.
 Known small gap: the scholarship entries have no separate "Sources" list at the end (they cite sources in the text and give the official link). Add one when you next edit an entry.
