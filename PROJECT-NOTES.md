@@ -26,7 +26,7 @@ Last updated: 2026-11-20. This file replaces all older versions (it merges the n
 
 ## Status
 - Site live. Code now includes: two funding levels, "My country" + "Study in" filters, `draft: true` hide switch, full-square icons, editor config with `repo: opportunes360/globe-stacks`.
-- Content: **17 scholarships, 13 guides**. All scholarships have `eligible` and `open_to`. All upcoming dates live in `content/deadlines.json` (the Deadlines page counts days left by itself; no typed day counts in entries).
+- Content: **17 scholarships, 13 guides**. All scholarships have `eligible` and `open_to`. Dates feed the Deadlines page from each entry's "Final application deadline" field and from `content/deadlines.json` (the page counts days left by itself; no typed day counts in entries).
 - **Editor (/admin/) is NOT tested.** It needs a fine-grained GitHub token (this one repo only, Contents read and write). Sveltia version 0.158.1 loads from unpkg. Test sign-in before relying on it.
 - The new "Another country" option in the filter hides entries marked africa or a country list, and keeps `all` and `unknown`.
 
@@ -57,7 +57,7 @@ Guides (13): how scholarships work and how to spot scams; how to write a persona
 ## Backlog: what to write next (one per message)
 
 ### Urgent first
-1. Berea closes 30 Nov 2026 and UBC 2 Dec 2026. Nothing to rewrite (the Deadlines page counts days left). After each new scholarship, add a row to `content/deadlines.json`.
+1. Berea closes 30 Nov 2026 and UBC 2 Dec 2026. Nothing to rewrite (the Deadlines page counts days left). For each new scholarship, fill the "Final application deadline" field when the date is confirmed.
 
 ### Checked on official pages earlier, not yet written
 - **Lester B. Pearson International Scholarship (Toronto, Canada).** Full. School nomination required. 2026 cycle closed (nomination 9 Oct, application 6 Nov). Next cycle expected autumn 2027. https://future.utoronto.ca/pearson-scholarships
@@ -79,8 +79,11 @@ Guides (13): how scholarships work and how to spot scams; how to write a persona
 ## Guides to add later
 Only A9 (Samia Scholarship explained) is left in TASKS.md.
 
-## Automatic closing (added 2026-11-20)
-In `content/deadlines.json`, put `"closes": true` on the ONE row that is a scholarship's final application deadline. After that date (Tanzania time) the site marks it "Closed for now" by itself: on the list, on its page, in the Status filter, and it drops off the Deadlines page. Nothing to do on that day. It only works for rows marked this way (now: Berea, UBC, Dartmouth, Yale, Amherst, NYU Abu Dhabi, Reach Oxford). When a new round is announced: add a new dated row with `"closes": true`, and change the entry's `status` back to `open` or `upcoming` and update its dates text by hand. Scholarships with unconfirmed dates (Hungary, Korea, Japan...) are never auto-closed.
+## Automatic closing (simple way, 2026-11-20)
+Each scholarship form in the editor has a field **Final application deadline (date, optional)**, saved as `closes: 2027-01-31`. Fill it only when the official page confirms the final date. After that date (Tanzania time) the site marks the scholarship "Closed for now" by itself (list, page, Status filter) and removes its row from the Deadlines page. The Deadlines page also shows that date automatically, so a normal new scholarship needs NO change in `content/deadlines.json`.
+- Unconfirmed dates: leave the field empty. These are never auto-closed.
+- New round announced: change the `closes` date to the new date, set Status back to Open or Upcoming, and update the "Dates and deadline" text.
+- `content/deadlines.json` is only for extra dates (for example financial-aid forms), "expected" dates, and the "no date yet" list. Seven older scholarships (Berea, UBC, Dartmouth, Yale, Amherst, NYU Abu Dhabi, Reach Oxford) still use `"closes": true` rows there, and that keeps working.
 
 ## Site checks done
 2026-11-20: all 40 pages tested on phone (390 px) and desktop. No broken internal links, no browser errors. Fixed: long web addresses and wide tables overflowing on phones. Filters, Deadlines page and install manifest tested. Not tested by Claude: the /admin/ editor sign-in (needs your token), and the installed app on a real phone.

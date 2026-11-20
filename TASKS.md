@@ -31,7 +31,7 @@ Each guide: 1,200 to 2,000 words, simple English, friendly, practical. Save as `
 - [ ] **A9. Samia Scholarship explained.** Task: "Research the Tanzanian government's Samia Scholarship on official government pages and write the guide `samia-scholarship-explained`. Category Start here. Say clearly what is confirmed and what is not."
 
 ## B. Scholarships (one per chat; use the format in PROJECT-NOTES.md)
-After each one: add its row to `content/deadlines.json`, add it to the table in PROJECT-NOTES.md.
+After each one: fill the "Final application deadline" field if the date is confirmed, and add it to the table in PROJECT-NOTES.md.
 The starter for each: "Write the scholarship entry for NAME. Read the official page first. Check Tanzania and other African countries, level (bachelor's only), what is covered, the next deadline and year. Fill all front-matter keys including eligible and open_to. Use the same sections as the other entries."
 
 - [ ] B1. Pearson International Scholarship (Toronto)
@@ -50,6 +50,6 @@ The starter for each: "Write the scholarship entry for NAME. Read the official p
 ## C. Fixes and features (small)
 - [x] C1. Test the editor: create the GitHub token and sign in at /admin/. If it fails, tell Claude the exact message.
 - [x] C2. "Days left" is now counted automatically on the Deadlines page (typed day counts removed from entries, 2026-11-20).
-- [x] C3. Deadlines page. IMPORTANT: every new scholarship needs a row in `content/deadlines.json` (a dated row, or a "nodate" row).
+- [x] C3. Deadlines page. Each scholarship form has a "Final application deadline" field; fill it when the date is confirmed and the site does the rest (see PROJECT-NOTES.md).
 - [ ] C4. Swahili versions of the main pages.
 - [x] C5. Full site check done 2026-11-20 (40 pages, phone and desktop, links, filters). Repeat a quick check after adding many scholarships.
