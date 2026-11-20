@@ -318,6 +318,7 @@ function layout({ title, desc, urlPath, body, noindex, active }) {
   const nav = [
     ['/scholarships/', 'Scholarships'],
     ['/guides/', 'Guides'],
+    ['/deadlines/', 'Deadlines'],
     ['/about/', 'About'],
   ];
   return `<!doctype html>
@@ -518,6 +519,48 @@ function build() {
   <p id="none" class="empty" hidden>No scholarships match. Clear the filters, or <a href="${waLink('Hello Globe Stacks, please add this scholarship: ')}" target="_blank" rel="noopener">tell us on WhatsApp</a> which one you are looking for.</p>
 </div></section>`;
   addPage('/scholarships/', layout({ title: 'Scholarships', desc: 'Verified undergraduate scholarships and funding for African students, with deadlines, eligibility and official links.', urlPath: '/scholarships/', body: schBody, active: '/scholarships/' }), 0.9);
+
+  /* Deadlines page */
+  {
+    const dl = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'deadlines.json'), 'utf8'));
+    const bySlug = Object.fromEntries(scholarships.map((x) => [x.slug, x]));
+    const today = new Date().toISOString().slice(0, 10);
+    const upcoming = dl.dates.filter((d) => bySlug[d.slug] && d.date >= today).sort((x, y) => x.date.localeCompare(y.date));
+    const rowHtml = (d) => `<article class="row dl-row" data-date="${d.date}">
+  <div class="dl-date"><strong>${d.kind === 'confirmed' ? formatDate(d.date) : esc(d.shown || 'Not confirmed')}</strong>${d.kind === 'confirmed' ? '<span class="dl-left"></span>' : ''}</div>
+  <div class="row-main">
+    <h3><a href="/scholarships/${d.slug}/">${esc(bySlug[d.slug].title)}</a></h3>
+    <p class="row-meta"><span>${esc(d.what)}</span></p>
+    ${d.note ? `<p>${esc(d.note)}</p>` : ''}
+  </div>
+</article>`;
+    const sure = upcoming.filter((d) => d.kind === 'confirmed');
+    const guess = upcoming.filter((d) => d.kind !== 'confirmed');
+    const none = dl.nodate.filter((d) => bySlug[d.slug]);
+    const dlBody = `
+<section class="page-head"><div class="wrap narrow">
+  <h1>Upcoming deadlines</h1>
+  <p class="lead">Every date we have confirmed, in one list, with the closest first. Always check the official page before you apply, because dates can change.</p>
+</div></section>
+<section class="section"><div class="wrap narrow">
+  <h2>Confirmed dates</h2>
+  ${sure.length ? `<div class="rows">${sure.map(rowHtml).join('\n')}</div>` : '<p>No confirmed upcoming dates right now. Check the scholarships page.</p>'}
+  ${guess.length ? `<h2 class="cat">Expected, but not confirmed</h2><p>These dates are guesses from earlier years. Do not plan around them until the official page confirms them.</p><div class="rows">${guess.map(rowHtml).join('\n')}</div>` : ''}
+  ${none.length ? `<h2 class="cat">No date yet</h2><div class="rows">${none.map((d) => `<article class="row dl-row"><div class="dl-date"><strong>Not confirmed</strong></div><div class="row-main"><h3><a href="/scholarships/${d.slug}/">${esc(bySlug[d.slug].title)}</a></h3><p>${esc(d.text)}</p></div></article>`).join('\n')}</div>` : ''}
+  <p class="verified">Days left are counted from today's date in Tanzania. Some official pages print the day and month but not the year. Where that is so, we say it in the note.</p>
+</div></section>
+<script>
+(function(){try{
+var t=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Dar_es_Salaam'}).format(new Date());
+var T=Date.parse(t+'T00:00:00Z');
+document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
+ var n=Math.round((Date.parse(r.getAttribute('data-date')+'T00:00:00Z')-T)/864e5);
+ if(n<0){r.hidden=true;return}
+ var L=r.querySelector('.dl-left');if(L)L.textContent=n===0?'Today':n===1?'1 day left':n+' days left';
+});}catch(e){}})();
+</script>`;
+    addPage('/deadlines/', layout({ title: 'Upcoming deadlines', desc: 'All upcoming scholarship deadlines for African students in one list, with days left. Only dates we confirmed on official pages.', urlPath: '/deadlines/', body: dlBody, active: '/deadlines/' }), 0.9);
+  }
 
   /* Scholarship pages */
   for (const s of scholarships) {
