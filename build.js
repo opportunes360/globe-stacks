@@ -289,7 +289,8 @@ const STATUS = {
 let DL_ROWS = [];
 try { DL_ROWS = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'deadlines.json'), 'utf8')).dates || []; } catch (e) {}
 const TODAY_TZ = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Dar_es_Salaam' }).format(new Date());
-const closesOf = (s) => [s.closes, ...DL_ROWS.filter((d) => d.slug === s.slug && d.closes === true).map((d) => d.date)].filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(String(x || ''))).map(String).sort().pop() || '';
+const dateOnly = (v) => (String(v || '').match(/^\d{4}-\d{2}-\d{2}/) || [''])[0];
+const closesOf = (s) => [s.closes, ...DL_ROWS.filter((d) => d.slug === s.slug && d.closes === true).map((d) => d.date)].map(dateOnly).filter(Boolean).sort().pop() || '';
 const effStatus = (s) => (closesOf(s) && closesOf(s) < TODAY_TZ && (s.status === 'open' || s.status === 'upcoming') ? 'closed' : s.status);
 const fundingInfo = (f) => FUNDING[f] || { label: 'Partly funded', level: 2 };
 const statusInfo = (s) => STATUS[s] || STATUS.check;
@@ -551,8 +552,8 @@ function build() {
     const today = new Date().toISOString().slice(0, 10);
     /* A scholarship's own "closes" date (set in the editor) becomes a row here too, unless the file already has it. */
     scholarships.forEach((x) => {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(String(x.closes || '')) && !dl.dates.some((d) => d.slug === x.slug && d.date === String(x.closes))) {
-        dl.dates.push({ date: String(x.closes), slug: x.slug, what: 'Final application deadline', kind: 'confirmed', closes: true });
+      if (dateOnly(x.closes) && !dl.dates.some((d) => d.slug === x.slug && d.date === dateOnly(x.closes))) {
+        dl.dates.push({ date: dateOnly(x.closes), slug: x.slug, what: 'Final application deadline', kind: 'confirmed', closes: true });
       }
     });
     const upcoming = dl.dates.filter((d) => bySlug[d.slug] && d.date >= today).sort((x, y) => x.date.localeCompare(y.date));

@@ -80,7 +80,7 @@ Guides (13): how scholarships work and how to spot scams; how to write a persona
 Only A9 (Samia Scholarship explained) is left in TASKS.md.
 
 ## Automatic closing (simple way, 2026-11-20)
-Each scholarship form in the editor has a field **Final application deadline (date, optional)**, saved as `closes: 2027-01-31`. Fill it only when the official page confirms the final date. After that date (Tanzania time) the site marks the scholarship "Closed for now" by itself (list, page, Status filter) and removes its row from the Deadlines page. The Deadlines page also shows that date automatically, so a normal new scholarship needs NO change in `content/deadlines.json`.
+Each scholarship form in the editor has a calendar picker **Final application deadline (optional)**, saved as `closes: 2027-01-31`. Fill it only when the official page confirms the final date. After that date (Tanzania time) the site marks the scholarship "Closed for now" by itself (list, page, Status filter) and removes its row from the Deadlines page. The Deadlines page also shows that date automatically, so a normal new scholarship needs NO change in `content/deadlines.json`.
 - Unconfirmed dates: leave the field empty. These are never auto-closed.
 - New round announced: change the `closes` date to the new date, set Status back to Open or Upcoming, and update the "Dates and deadline" text.
 - `content/deadlines.json` is only for extra dates (for example financial-aid forms), "expected" dates, and the "no date yet" list. Seven older scholarships (Berea, UBC, Dartmouth, Yale, Amherst, NYU Abu Dhabi, Reach Oxford) still use `"closes": true` rows there, and that keeps working.
