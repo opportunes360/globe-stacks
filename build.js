@@ -408,6 +408,11 @@ function scholarshipItem(s) {
 </article>`;
 }
 
+const crypto = require('crypto');
+const fileHash = (f) => { try { return crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, 'static', f))).digest('hex').slice(0, 8); } catch (e) { return 'x'; } };
+const CSS_URL = `/css/style.${fileHash('css/style.css')}.css`;
+const JS_URL = `/js/app.${fileHash('js/app.js')}.js`;
+
 function layout({ title, desc, urlPath, body, noindex, active }) {
   const fullTitle = urlPath === '/' ? `${site.name}: ${site.tagline}` : `${title} | ${site.name}`;
   const dock = [
@@ -437,16 +442,17 @@ ${noindex ? '<meta name="robots" content="noindex">' : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>try{var d=document.documentElement;d.classList.add('js');var t=localStorage.getItem('gs-theme');if(t)d.setAttribute('data-theme',t);var sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;if(sa&&!sessionStorage.getItem('gs-splash')){d.classList.add('splash-on');sessionStorage.setItem('gs-splash','1')}}catch(e){}</script>
-<link rel="stylesheet" href="/css/style.css">
+<style>html{background:#f6f9fe}html[data-theme=dark]{background:#08182c}@media(prefers-color-scheme:dark){html:not([data-theme=light]){background:#08182c}}</style>
+<link rel="stylesheet" href="${CSS_URL}" onerror="this.onerror=null;this.href='${CSS_URL}?r='+Date.now()">
 </head>
 <body>
 <div class="splash" id="splash" aria-hidden="true">${splashSvg()}<p class="sp-name">${esc(site.name)}</p><p class="sp-dots"><i></i><i></i><i></i></p></div>
+<div class="pwa-pop" id="pwa-pop" role="dialog" aria-label="Install Globe Stacks" hidden><div class="pwa-card">${markSvg('mark', 44)}<div class="pwa-txt"><strong>Install Globe Stacks</strong><span>Open it like an app and read offline. It is free.</span></div><div class="pwa-act"><button type="button" class="btn btn-sm" id="pwa-yes">Install</button><button type="button" class="pwa-no" id="pwa-no" aria-label="Not now">Not now</button></div></div></div>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap header-in">
     <a class="brand" href="/" aria-label="${esc(site.name)} home">${markSvg('mark', 34)}<span>${esc(site.name)}</span></a>
     <div class="tools">
-      <button class="btn-quiet" id="install" type="button" hidden>Install app</button>
       <button class="theme-switch" id="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode">${icon('sun', 'ic ic-sun')}${icon('moon', 'ic ic-moon')}<span class="knob"></span></button>
     </div>
   </div>
@@ -482,9 +488,9 @@ ${body}
   <div class="wrap foot-base"><p>&copy; ${new Date().getFullYear()} ${esc(site.name)}</p></div>
 </footer>
 <nav class="dock" aria-label="Main"><div class="dock-in">
-${dock.map(([h, l, ic]) => `  <a class="dock-a${h === '/' ? ' dock-home' : ''}" href="${h}" aria-label="${l}" title="${l}"${isCur(h) ? ' aria-current="page"' : ''}>${icon(ic)}<span class="dock-dot"></span></a>`).join('\n')}
+${dock.map(([h, l, ic]) => `  <a class="dock-a${h === '/' ? ' dock-home' : ''}" href="${h}" aria-label="${l}"${isCur(h) ? ' aria-current="page"' : ''}>${icon(ic)}<span class="dock-l">${l}</span></a>`).join('\n')}
 </div></nav>
-<script src="/js/app.js" defer></script>
+<script src="${JS_URL}" defer></script>
 </body>
 </html>`;
 }
@@ -501,6 +507,8 @@ function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(DIST, { recursive: true });
   copyDir(path.join(ROOT, 'static'), DIST);
+  fs.copyFileSync(path.join(ROOT, 'static', 'css', 'style.css'), path.join(DIST, CSS_URL));
+  fs.copyFileSync(path.join(ROOT, 'static', 'js', 'app.js'), path.join(DIST, JS_URL));
 
   const guides = loadCollection('guides').sort((a, b) => Number(a.order || 99) - Number(b.order || 99));
   const scholarships = loadCollection('scholarships').sort((a, b) => {
@@ -862,6 +870,15 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
         display: 'standalone',
         background_color: '#0A2540',
         theme_color: '#0A2540',
+        lang: 'en',
+        orientation: 'portrait',
+        categories: ['education'],
+        prefer_related_applications: false,
+        screenshots: [
+          { src: '/icons/shot-1.png', sizes: '540x960', type: 'image/png', form_factor: 'narrow', label: 'Home' },
+          { src: '/icons/shot-2.png', sizes: '540x960', type: 'image/png', form_factor: 'narrow', label: 'Scholarships' },
+          { src: '/icons/shot-wide.png', sizes: '1280x720', type: 'image/png', form_factor: 'wide', label: 'Home' },
+        ],
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
@@ -872,7 +889,7 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
       2
     )
   );
-  const precache = ['/', '/offline/', '/css/style.css', '/js/app.js', '/favicon.svg', '/manifest.webmanifest'].concat(
+  const precache = ['/', '/offline/', CSS_URL, JS_URL, '/favicon.svg', '/manifest.webmanifest'].concat(
     pages.map((p) => p.url)
   );
   writeFile(
@@ -883,7 +900,9 @@ const PRECACHE = ${JSON.stringify([...new Set(precache)])};
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(VERSION).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(VERSION)
+      .then((cache) => Promise.all(PRECACHE.map((u) => fetch(new Request(u, { cache: 'reload' })).then((r) => (r.ok ? cache.put(u, r) : null)).catch(() => null))))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -895,6 +914,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+/* Pages open instantly from the saved copy and refresh quietly in the background. */
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -902,32 +922,23 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith('/admin')) return;
 
+  const refresh = () =>
+    fetch(req).then((res) => {
+      if (res.ok && !res.redirected) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
+      return res;
+    });
+
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(VERSION).then((c) => c.put(req, copy));
-          return res;
-        })
-        .catch(() => caches.match(req).then((r) => r || caches.match('/offline/')))
+      caches.match(req, { ignoreSearch: true }).then((cached) => {
+        if (cached) { event.waitUntil(refresh().catch(() => {})); return cached; }
+        return refresh().catch(() => caches.match('/offline/'));
+      })
     );
     return;
   }
 
-  event.respondWith(
-    caches.match(req).then(
-      (cached) =>
-        cached ||
-        fetch(req).then((res) => {
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(VERSION).then((c) => c.put(req, copy));
-          }
-          return res;
-        })
-    )
-  );
+  event.respondWith(caches.match(req).then((cached) => cached || refresh()));
 });
 `
   );
