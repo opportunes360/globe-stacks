@@ -1,7 +1,7 @@
 # Globe Stacks: project notes
 
 Keep this file in the project. Upload it with the zip at the start of every new chat.
-Last updated: 2026-11-19. This file replaces all older versions (it merges the notes from the separate chats).
+Last updated: 2026-11-20. This file replaces all older versions (it merges the notes from the separate chats).
 
 ## Decisions
 - Name: Globe Stacks. Language: English. Free hosting: GitHub (opportunes360/globe-stacks, branch main) + Cloudflare Pages (globe-stacks.pages.dev). Build command `node build.js`, output folder `dist`, NODE_VERSION=22.
@@ -26,7 +26,7 @@ Last updated: 2026-11-19. This file replaces all older versions (it merges the n
 
 ## Status
 - Site live. Code now includes: two funding levels, "My country" + "Study in" filters, `draft: true` hide switch, full-square icons, editor config with `repo: opportunes360/globe-stacks`.
-- Content: **17 scholarships, 5 guides** (list below). All scholarships have `eligible` and `open_to`.
+- Content: **17 scholarships, 13 guides**. All scholarships have `eligible` and `open_to`. All upcoming dates live in `content/deadlines.json` (the Deadlines page counts days left by itself; no typed day counts in entries).
 - **Editor (/admin/) is NOT tested.** It needs a fine-grained GitHub token (this one repo only, Contents read and write). Sveltia version 0.158.1 loads from unpkg. Test sign-in before relying on it.
 - The new "Another country" option in the filter hides entries marked africa or a country list, and keeps `all` and `unknown`.
 
@@ -52,12 +52,12 @@ Last updated: 2026-11-19. This file replaces all older versions (it merges the n
 | Egypt government scholarships | egypt-government-scholarships.md | Partial | 2025/26 closed 15 Sep 2025. No 2026/27 notice found. |
 | **Sharda University (India)** | sharda-university-india.md | Partial | NEW 2026-11-19. Tuition discount (minimum 20%, up to 50% on many programmes). No deadline or fee table published on the pages read. Application fee conflict: USD 500 (Sierra Leone page) vs INR 1,500 (Indian route). Not a full scholarship. |
 
-Guides (5): how scholarships work and how to spot scams (1); how to write a personal statement (2); recommendation letters and your CV (3); getting your passport in Tanzania (4); student visa basics (5).
+Guides (13): how scholarships work and how to spot scams; how to write a personal statement; sample personal statements; recommendation letters and your CV; scholarship interview preparation; English tests (IELTS, TOEFL, Duolingo); SAT, ACT and entrance exams; need-based aid explained; certified copies, translations and apostille; getting your passport in Tanzania; student visa basics; money and arriving abroad; month-by-month application calendar.
 
 ## Backlog: what to write next (one per message)
 
 ### Urgent first
-1. Check the three entries closing in under 3 weeks (Berea 30 Nov, UBC 2 Dec, Dartmouth/Yale 1-2 Jan) still say the right dates, and update their "days left" boxes.
+1. Berea closes 30 Nov 2026 and UBC 2 Dec 2026. Nothing to rewrite (the Deadlines page counts days left). After each new scholarship, add a row to `content/deadlines.json`.
 
 ### Checked on official pages earlier, not yet written
 - **Lester B. Pearson International Scholarship (Toronto, Canada).** Full. School nomination required. 2026 cycle closed (nomination 9 Oct, application 6 Nov). Next cycle expected autumn 2027. https://future.utoronto.ca/pearson-scholarships
@@ -77,10 +77,14 @@ Guides (5): how scholarships work and how to spot scams (1); how to write a pers
 - Czech Government Scholarships (Tanzania not on 2027/28 list, no bachelor's listed). Italy ItAS (master's, Tanzania not listed). Aga Khan Foundation (postgraduate, part loan). UWC (high school). HESLB (loans). Postgraduate-only schemes: Commonwealth, Chevening, Australia Awards, Erasmus Mundus, VLIR-UOS, DAAD EPOS, Fulbright foreign student, Swedish Institute, Eiffel.
 
 ## Guides to add later
-Sample personal statements; English tests (IELTS, TOEFL, Duolingo); interview preparation; certified copies and apostille; SAT/ACT and entrance exams; month-by-month application calendar; money and arriving abroad; need-based aid explained (CSS Profile, need-blind vs need-aware).
+Only A9 (Samia Scholarship explained) is left in TASKS.md.
+
+## Site checks done
+2026-11-20: all 40 pages tested on phone (390 px) and desktop. No broken internal links, no browser errors. Fixed: long web addresses and wide tables overflowing on phones. Filters, Deadlines page and install manifest tested. Not tested by Claude: the /admin/ editor sign-in (needs your token), and the installed app on a real phone.
+Known small gap: the scholarship entries have no separate "Sources" list at the end (they cite sources in the text and give the official link). Add one when you next edit an entry.
 
 ## Later features
-Swahili versions; document checklist page; deadlines page; newsletter form (`newsletterUrl` in site.json); own domain when money allows; clean the Tanzania-specific wording if the audience is widened further.
+Swahili versions (C4); document checklist page; newsletter form (`newsletterUrl` in site.json); own domain when money allows; clean the Tanzania-specific wording if the audience is widened further.
 
 ## How to publish a change (no GitHub link to Claude, so files are sent as a zip)
 1. Download the update zip and unzip it on your computer.

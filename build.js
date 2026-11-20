@@ -256,7 +256,23 @@ function loadCollection(dir) {
       const { data, body } = parseFront(fs.readFileSync(path.join(full, f), 'utf8'));
       const slug = slugify(data.slug || f.replace(/\.md$/, ''));
       return { ...data, slug, body, html: md(body), words: body.split(/\s+/).filter(Boolean).length };
-    });
+    })
+    .filter((item) => item.draft !== true);
+}
+
+const AFRICA = ['Algeria','Angola','Benin','Botswana','Burkina Faso','Burundi','Cabo Verde','Cameroon','Central African Republic','Chad','Comoros','Congo (Republic)','Cote d\'Ivoire','DR Congo','Djibouti','Egypt','Equatorial Guinea','Eritrea','Eswatini','Ethiopia','Gabon','Gambia','Ghana','Guinea','Guinea-Bissau','Kenya','Lesotho','Liberia','Libya','Madagascar','Malawi','Mali','Mauritania','Mauritius','Morocco','Mozambique','Namibia','Niger','Nigeria','Rwanda','Sao Tome and Principe','Senegal','Seychelles','Sierra Leone','Somalia','South Africa','South Sudan','Sudan','Tanzania','Togo','Tunisia','Uganda','Zambia','Zimbabwe'];
+const norm = (x) => String(x).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').trim();
+function eligibleAttr(s) {
+  const v = norm(s.eligible || 'unknown');
+  if (v === 'all') return '*';
+  if (v === 'unknown' || v === '') return '?';
+  const out = new Set();
+  v.split(',').forEach((part) => {
+    const t = part.trim();
+    if (t === 'africa') AFRICA.forEach((c) => out.add(norm(c)));
+    else if (t) out.add(t);
+  });
+  return [...out].join('|');
 }
 
 const FUNDING = {
@@ -269,7 +285,7 @@ const STATUS = {
   closed: ['Closed for now', 'closed'],
   check: ['Check dates', 'check'],
 };
-const fundingInfo = (f) => FUNDING[f] || { label: f || 'Funding varies', level: 1 };
+const fundingInfo = (f) => FUNDING[f] || { label: 'Partly funded', level: 2 };
 const statusInfo = (s) => STATUS[s] || STATUS.check;
 
 /* ---------- shared fragments ---------- */
@@ -301,8 +317,8 @@ function shareLink(title, urlPath) {
 function scholarshipItem(s) {
   const f = fundingInfo(s.funding);
   const [stLabel, stCls] = statusInfo(s.status);
-  const hay = [s.title, s.country, s.level, s.summary, f.label].join(' ').toLowerCase();
-  return `<article class="row" data-item data-country="${esc(s.country)}" data-funding="${esc(s.funding)}" data-status="${esc(s.status)}" data-hay="${esc(hay)}">
+  const hay = [s.title, s.country, s.open_to, s.level, s.summary, f.label].join(' ').toLowerCase();
+  return `<article class="row" data-item data-country="${esc(s.country)}" data-funding="${esc(s.funding)}" data-status="${esc(s.status)}" data-eligible="${esc(eligibleAttr(s))}" data-hay="${esc(hay)}">
   <div class="row-meter" title="${esc(f.label)}">${meter(f.level)}<span>${esc(f.label)}</span></div>
   <div class="row-main">
     <h3><a href="/scholarships/${s.slug}/">${esc(s.title)}</a></h3>
@@ -507,7 +523,8 @@ function build() {
 <section class="section"><div class="wrap">
   <form id="filters" class="filters" role="search" autocomplete="off">
     <div class="field field-wide"><label for="q">Search</label><input id="q" name="q" type="search" placeholder="Name, country or keyword"></div>
-    <div class="field"><label for="country">Country</label><select id="country" name="country"><option value="">All countries</option>${countries.map((c) => `<option>${esc(c)}</option>`).join('')}</select></div>
+    <div class="field"><label for="mine">My country</label><select id="mine" name="mine"><option value="">Any country</option>${AFRICA.map((c) => `<option value="${esc(norm(c))}">${esc(c)}</option>`).join('')}<option value="__other">Another country</option></select></div>
+    <div class="field"><label for="country">Study in</label><select id="country" name="country"><option value="">Anywhere</option>${countries.map((c) => `<option>${esc(c)}</option>`).join('')}</select></div>
     <div class="field"><label for="funding">Funding</label><select id="funding" name="funding"><option value="">All types</option>${fundingsPresent.map((f) => `<option value="${f}">${fundingInfo(f).label}</option>`).join('')}</select></div>
     <div class="field"><label for="status">Status</label><select id="status" name="status"><option value="">Any status</option>${statusesPresent.map((s) => `<option value="${s}">${statusInfo(s)[0]}</option>`).join('')}</select></div>
     <div class="field field-btn"><button class="btn btn-ghost" type="reset" id="clear">Clear</button></div>
@@ -569,6 +586,7 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
     const urlPath = `/scholarships/${s.slug}/`;
     const facts = [
       ['Country', s.country],
+      ['Open to', s.open_to],
       ['Funding', `<span class="inline-meter">${meter(f.level)} ${esc(f.label)}</span>`, true],
       ['Level', s.level],
       ['Status', `<span class="badge ${stCls}">${stLabel}</span>`, true],
@@ -702,14 +720,15 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
         name: site.name,
         short_name: site.name,
         description: site.description,
+        id: '/',
         start_url: '/',
         scope: '/',
         display: 'standalone',
         background_color: '#0A2540',
         theme_color: '#0A2540',
         icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
           { src: '/icons/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
