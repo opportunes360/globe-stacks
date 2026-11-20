@@ -63,6 +63,17 @@
     });
   } catch (e) {}
 
+  /* Days-left chips */
+  try {
+    var tday = Date.parse(today + 'T00:00:00Z');
+    document.querySelectorAll('[data-days]').forEach(function (el) {
+      var n = Math.round((Date.parse(el.getAttribute('data-days') + 'T00:00:00Z') - tday) / 864e5);
+      if (n < 0) { el.hidden = true; return; }
+      el.textContent = n === 0 ? 'Last day' : n === 1 ? '1 day left' : n + ' days left';
+      el.classList.add(n <= 14 ? 'urgent' : n <= 45 ? 'warn' : 'calm');
+    });
+  } catch (e) {}
+
   /* Scholarship filters */
   var form = document.getElementById('filters');
   if (form) {
