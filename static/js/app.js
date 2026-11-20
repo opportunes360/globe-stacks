@@ -10,7 +10,10 @@
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
   function paintThemeButton() {
-    if (themeBtn) themeBtn.textContent = isDark() ? 'Light mode' : 'Dark mode';
+    if (themeBtn) {
+      themeBtn.setAttribute('aria-checked', isDark() ? 'true' : 'false');
+      themeBtn.setAttribute('title', isDark() ? 'Switch to light mode' : 'Switch to dark mode');
+    }
   }
   if (themeBtn) {
     paintThemeButton();
@@ -114,4 +117,78 @@
     form.addEventListener('reset', function () { setTimeout(apply, 0); });
     apply();
   }
+})();
+
+/* App feel: loading screen, reveal on scroll, parallax, flip cards, dock */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Loading screen (only when opened as an installed app): loops until the page is ready */
+  var splash = document.getElementById('splash');
+  if (splash && root.classList.contains('splash-on')) {
+    var started = Date.now();
+    var closed = false;
+    var finish = function () {
+      if (closed) return;
+      closed = true;
+      splash.classList.add('out');
+      setTimeout(function () { root.classList.remove('splash-on'); }, 480);
+    };
+    var ready = function () { setTimeout(finish, Math.max(0, 2000 - (Date.now() - started))); };
+    if (document.readyState === 'complete') ready(); else window.addEventListener('load', ready);
+    setTimeout(finish, 7000);
+  }
+
+  /* Reveal on scroll */
+  var rev = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        el.classList.add('in');
+        io.unobserve(el);
+        el.addEventListener('transitionend', function () { el.style.transitionDelay = '0s'; }, { once: true });
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    rev.forEach(function (el) { io.observe(el); });
+  } else {
+    rev.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* Parallax */
+  var px = Array.prototype.slice.call(document.querySelectorAll('[data-speed]'));
+  if (px.length && !reduce) {
+    var ticking = false;
+    var update = function () {
+      ticking = false;
+      var vh = window.innerHeight;
+      px.forEach(function (el) {
+        var host = el.closest('[data-parallax-root]');
+        if (!host) return;
+        var r = host.getBoundingClientRect();
+        if (r.bottom < -250 || r.top > vh + 250) return;
+        var prog = r.top + r.height / 2 - vh / 2;
+        el.style.transform = 'translate3d(0,' + (-prog * parseFloat(el.getAttribute('data-speed'))).toFixed(1) + 'px,0)';
+      });
+    };
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
+  /* Flip cards: tap or Enter flips on touch; hover flips with a mouse (CSS) */
+  document.querySelectorAll('.flip').forEach(function (c) {
+    c.addEventListener('click', function (e) { if (e.target.closest('a')) return; c.classList.toggle('flipped'); });
+    c.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('a')) { e.preventDefault(); c.classList.toggle('flipped'); }
+    });
+  });
+
+  /* Dock: little pop when pressed */
+  document.querySelectorAll('.dock-a').forEach(function (a) {
+    a.addEventListener('pointerdown', function () { a.classList.remove('pop'); void a.offsetWidth; a.classList.add('pop'); });
+  });
 })();
