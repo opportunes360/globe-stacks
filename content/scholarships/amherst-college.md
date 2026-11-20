@@ -1,6 +1,8 @@
 ---
 title: Amherst College (need-based financial aid)
 country: United States
+eligible: "all"
+open_to: "Students of any nationality who apply to Amherst as international applicants."
 funding: Full
 level: "Bachelor's (first-year admission to Amherst College, a four-year BA)"
 status: open

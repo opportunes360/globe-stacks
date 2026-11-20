@@ -1,6 +1,8 @@
 ---
 title: "Global Korea Scholarship for Undergraduates (GKS-U)"
 country: South Korea
+eligible: "unknown"
+open_to: "Citizens of countries invited each year. Tanzania was confirmed for 2027; check your own country's Korean embassy."
 funding: Full
 level: "Bachelor's (also associate degree)"
 status: closed

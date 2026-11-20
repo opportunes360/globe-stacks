@@ -1,6 +1,8 @@
 ---
 title: Egypt Government Scholarships (EGYAID and Al-Azhar)
 country: Egypt
+eligible: "unknown"
+open_to: "Egypt gives places to partner countries each year. We checked Tanzania only."
 funding: Partial
 level: "Bachelor's (Ministry of Higher Education route); Bachelor's, Master's and PhD (Al-Azhar route)"
 status: check

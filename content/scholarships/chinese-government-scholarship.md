@@ -1,6 +1,8 @@
 ---
 title: Chinese Government Scholarship (CSC)
 country: China
+eligible: "unknown"
+open_to: "Open to many countries through each country's own channel. We checked Tanzania only."
 funding: Full
 level: "Bachelor's, Master's, PhD"
 status: check

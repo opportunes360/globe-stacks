@@ -1,6 +1,8 @@
 ---
 title: Dartmouth College (need-based financial aid)
 country: United States
+eligible: "all"
+open_to: "Students of any citizenship (need-based aid is the same for international applicants)."
 funding: Full
 level: "Bachelor's (first-year admission)"
 status: open
@@ -116,9 +118,9 @@ Questions about aid can go to: financial.aid@dartmouth.edu
 
 Dartmouth will never ask you to pay to be considered for a scholarship. Only use the web addresses listed here (dartmouth.edu, commonapp.org, collegeboard.org). Read [how scholarships work and how to spot scams](/guides/how-scholarships-work-and-how-to-spot-scams/).
 
-## With 43 days left (as of 19 November 2026)
+## If the deadline is close
 
-The Regular Decision deadline is 1 January 2027, which is 43 days away. Your financial aid documents are due 1 February 2027, 74 days away. Do the slow parts first: your test score, your teachers' recommendation letters and your parents' income and tax documents. Do not wait for the last week, because websites can be slow when many students apply at once.
+The Regular Decision deadline is 1 January 2027. Your financial aid documents are due 1 February 2027. The [deadlines page](/deadlines/) shows how many days are left. Do the slow parts first: your test score, your teachers' recommendation letters and your parents' income and tax documents. Do not wait for the last week, because websites can be slow when many students apply at once.
 
 ## Prepare now
 

@@ -1,6 +1,8 @@
 ---
 title: Mastercard Foundation Scholars Program
 country: Africa and partner universities worldwide
+eligible: "africa"
+open_to: "African nationals; each partner university adds its own country rules, so check the partner."
 funding: Full
 level: "Undergraduate, Master's"
 status: check

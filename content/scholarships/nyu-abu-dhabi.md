@@ -1,6 +1,8 @@
 ---
 title: NYU Abu Dhabi Need-Based Financial Aid
 country: United Arab Emirates
+eligible: "all"
+open_to: "Students of any citizenship who show financial need through the CSS Profile."
 funding: Partial
 level: "Bachelor's"
 status: open

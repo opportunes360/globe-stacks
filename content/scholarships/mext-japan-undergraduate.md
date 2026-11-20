@@ -1,6 +1,8 @@
 ---
 title: MEXT Japanese Government Scholarship (Undergraduate)
 country: Japan
+eligible: "unknown"
+open_to: "Each country applies through its own Japanese embassy. We checked Tanzania only."
 funding: Full
 level: "Bachelor's"
 status: closed

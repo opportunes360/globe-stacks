@@ -1,6 +1,8 @@
 ---
 title: Morocco Government Scholarship (AMCI)
 country: Morocco
+eligible: "unknown"
+open_to: "Morocco gives places to partner countries each year. We checked Tanzania only."
 funding: Partial
 level: "Bachelor's (the Tanzanian quota also lists Master's and PhD)"
 status: upcoming

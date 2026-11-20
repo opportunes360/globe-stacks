@@ -1,6 +1,8 @@
 ---
 title: Yale University (need-based financial aid)
 country: United States
+eligible: "all"
+open_to: "Students of any citizenship, anywhere in the world."
 funding: Full
 level: "Bachelor's (Yale College, four-year degree)"
 status: open
@@ -81,9 +83,9 @@ Questions about aid can go to: undergrad.fa@yale.edu
 
 Yale will never ask you to pay to be considered for a scholarship. Only use the web addresses listed here (yale.edu, commonapp.org, coalitionforcollegeaccess.org, collegeboard.org). Read [how scholarships work and how to spot scams](/guides/how-scholarships-work-and-how-to-spot-scams/).
 
-## With 44 days left (as of 19 November 2026)
+## If the deadline is close
 
-The Regular Decision deadline is 2 January 2027, which is 44 days away. Yale's recommended date for aid documents is 15 February 2027. Do the slow parts first: your test score, your teachers' recommendation letters and your family's income documents. Do not wait for the last week, because websites can be slow when many students apply at once.
+The Regular Decision deadline is 2 January 2027. The [deadlines page](/deadlines/) shows how many days are left. Yale's recommended date for aid documents is 15 February 2027. Do the slow parts first: your test score, your teachers' recommendation letters and your family's income documents. Do not wait for the last week, because websites can be slow when many students apply at once.
 
 ## Prepare now
 

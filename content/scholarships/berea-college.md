@@ -1,6 +1,8 @@
 ---
 title: Berea College (USA)
 country: United States
+eligible: "all"
+open_to: "Students of any nationality; Berea publishes no country list and admits very few international students."
 funding: Full
 level: "Bachelor's"
 status: open
@@ -86,8 +88,8 @@ The checklist page also lists an optional "personal submission". Berea says to g
 - Berea does not offer family housing or support. Your campus earnings cannot support family at home.
 - Berea only gives a bachelor's degree. If you plan a professional programme afterwards (for example medicine), you must apply separately to that programme after Berea.
 
-## With 11 days left (as of 19 November 2026)
+## If the deadline is close
 
-Only start this year if you can finish every item by 30 November. The slowest parts are usually the test score, the records and the recommendations. If you do not have a valid English score, plan that first. If you cannot finish in time, use the months before next year's round to prepare: see our guides on [personal statements](/guides/how-to-write-a-personal-statement/), [recommendation letters](/guides/recommendation-letters-and-your-cv/) and [your passport](/guides/getting-your-passport-in-tanzania/).
+The deadline is 30 November (see our [deadlines page](/deadlines/) for days left). Only start this year if you can finish every item by then. The slowest parts are usually the test score, the records and the recommendations. If you do not have a valid English score, plan that first. If you cannot finish in time, use the months before next year's round to prepare: see our guides on [personal statements](/guides/how-to-write-a-personal-statement/), [recommendation letters](/guides/recommendation-letters-and-your-cv/) and [your passport](/guides/getting-your-passport-in-tanzania/).
 
 Be careful of websites that ask you to pay to "secure" a Berea place. Berea says applying is free. See [how to spot scams](/guides/how-scholarships-work-and-how-to-spot-scams/).

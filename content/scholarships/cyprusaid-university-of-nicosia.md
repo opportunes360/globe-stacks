@@ -1,6 +1,8 @@
 ---
 title: "CyprusAid Scholarship (University of Nicosia)"
 country: Cyprus
+eligible: "Kenya, Uganda, Rwanda, Zambia, Botswana, Mauritius, Ghana, Senegal, Tanzania, Madagascar"
+open_to: "Citizens of ten countries: Kenya, Uganda, Rwanda, Zambia, Botswana, Mauritius, Ghana, Senegal, Tanzania and Madagascar."
 funding: Full
 level: "Bachelor's (English-taught, on-campus)"
 status: closed

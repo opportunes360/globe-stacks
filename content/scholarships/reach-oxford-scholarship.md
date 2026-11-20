@@ -1,6 +1,8 @@
 ---
 title: Reach Oxford Scholarship
 country: United Kingdom
+eligible: "unknown"
+open_to: "Citizens of countries on Oxford's official list (OECD aid-recipient countries). Tanzania, Kenya, Uganda and many other African countries are on it; check the list for yours."
 funding: Full
 level: "Bachelor's (first undergraduate degree at Oxford, any course except medicine)"
 status: upcoming

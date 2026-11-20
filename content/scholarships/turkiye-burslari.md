@@ -1,6 +1,8 @@
 ---
 title: "Türkiye Scholarships (Türkiye Burslari)"
 country: Türkiye
+eligible: "all"
+open_to: "Citizens of every country except Turkish citizens."
 funding: Full
 level: "Bachelor's (also associate degree, Master's, PhD)"
 status: upcoming

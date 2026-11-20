@@ -1,6 +1,8 @@
 ---
 title: UBC International Scholars Program
 country: Canada
+eligible: "all"
+open_to: "International students from any country; UBC publishes no country list. A school nominator is required."
 funding: Partial
 level: "Bachelor's (first undergraduate degree, straight from high school)"
 status: open
@@ -60,7 +62,7 @@ UBC says the awards **range in value up to the full cost of your programme and l
 
 The deadline was 15 November until UBC extended it. Some websites still show the old date, so trust UBC's page.
 
-**With 13 days left (as of 19 November 2026), be realistic.** You need a school nominator and a teacher referee to finish their forms a few days before the deadline, plus four essays and detailed family financial documents. If you cannot finish in time, check UBC's page for the next round. As of 18 November 2026 UBC has not announced dates for the September 2028 intake, so do not rely on any date until it appears.
+**If the deadline (2 December 2026) is close, be realistic.** The [deadlines page](/deadlines/) shows the days left. You need a school nominator and a teacher referee to finish their forms a few days before the deadline, plus four essays and detailed family financial documents. If you cannot finish in time, check UBC's page for the next round. As of 18 November 2026 UBC has not announced dates for the September 2028 intake, so do not rely on any date until it appears.
 
 ## How to apply
 

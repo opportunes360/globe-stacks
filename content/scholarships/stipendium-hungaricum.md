@@ -1,6 +1,8 @@
 ---
 title: Stipendium Hungaricum
 country: Hungary
+eligible: "unknown"
+open_to: "Citizens of partner countries. Tanzania is confirmed; other African countries must be checked on the official partner list."
 funding: Full
 level: "Bachelor's, Master's, PhD (separate call)"
 status: upcoming
