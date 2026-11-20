@@ -321,6 +321,38 @@ function shareLink(title, urlPath) {
   return `https://wa.me/?text=${encodeURIComponent(title + ' ' + site.url + urlPath)}`;
 }
 
+const dateOnlyLocal = (v) => (String(v || '').match(/^\d{4}-\d{2}-\d{2}/) || [''])[0];
+function upcomingFinal(scholarships) {
+  const rows = DL_ROWS.filter((d) => d.kind === 'confirmed' && d.closes === true).map((d) => ({ date: d.date, slug: d.slug, what: d.what }));
+  scholarships.forEach((x) => {
+    const c = dateOnlyLocal(x.closes);
+    if (c && !rows.some((d) => d.slug === x.slug && d.date === c)) rows.push({ date: c, slug: x.slug, what: 'Final application deadline' });
+  });
+  const seen = new Set();
+  return rows
+    .filter((d) => d.date >= TODAY_TZ)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .filter((d) => (seen.has(d.slug) ? false : seen.add(d.slug)));
+}
+function tocFrom(html) {
+  const items = [...String(html).matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '')]);
+  if (items.length < 3) return '';
+  return `<details class="toc"><summary>On this page <span>${items.length} sections</span></summary><ol>${items.map(([i, t]) => `<li><a href="#${i}">${t}</a></li>`).join('')}</ol></details>`;
+}
+function scholarshipCard(s) {
+  const f = fundingInfo(s.funding);
+  const st = effStatus(s);
+  const [stLabel, stCls] = statusInfo(st);
+  const cl = closesOf(s);
+  const live = cl && st !== 'closed';
+  return `<article class="card scard">
+  <div class="chips"><span class="chip">${esc(s.country)}</span><span class="chip fund">${meter(f.level)} ${esc(f.label)}</span></div>
+  <h3><a class="card-link" href="/scholarships/${s.slug}/">${esc(s.title)}</a></h3>
+  <p class="clamp">${esc(s.summary)}</p>
+  <p class="card-foot"><span class="badge ${stCls}"${live ? ` data-closes="${cl}"` : ''}>${stLabel}</span>${live ? `<span class="chip days" data-days="${cl}"></span>` : ''}</p>
+</article>`;
+}
+
 function scholarshipItem(s) {
   const f = fundingInfo(s.funding);
   const st = effStatus(s);
@@ -437,6 +469,7 @@ function build() {
 
   /* Home */
   const featured = scholarships.filter((s) => s.featured).slice(0, 4);
+  const bySlugHome = Object.fromEntries(scholarships.map((x) => [x.slug, x]));
   const homeBody = `
 <section class="hero">
   <div class="wrap hero-in">
@@ -449,6 +482,7 @@ function build() {
         <button class="btn" type="submit">Search</button>
       </form>
       <p class="hero-links"><a class="btn btn-ghost" href="/guides/">Start with the guides</a><a class="btn btn-ghost" href="/scholarships/">Browse all scholarships</a></p>
+      <ul class="hero-stats"><li><strong>${scholarships.length}</strong> scholarships</li><li><strong>${guides.length}</strong> guides</li><li><strong>Free</strong> for everyone</li></ul>
     </div>
     <div class="hero-art" aria-hidden="true">
       <svg viewBox="0 0 420 380" role="img" focusable="false">
@@ -467,17 +501,38 @@ function build() {
   </div>
 </section>
 
+${(() => {
+  const soon = upcomingFinal(scholarships).slice(0, 3).filter((d) => bySlugHome[d.slug]);
+  if (!soon.length) return '';
+  return `<section class="section soon">
+  <div class="wrap">
+    <h2>Closing soon</h2>
+    <p class="section-lead">The next final deadlines we have confirmed. <a href="/deadlines/">See every date</a>.</p>
+    <div class="cards cards-3 scroll">
+      ${soon.map((d) => `<article class="card dcard"><span class="chip days" data-days="${d.date}"></span><h3><a class="card-link" href="/scholarships/${d.slug}/">${esc(bySlugHome[d.slug].title)}</a></h3><p>${esc(d.what)} &middot; ${formatDate(d.date)}</p></article>`).join('\n')}
+    </div>
+  </div>
+</section>`;
+})()}
+
 <section class="section">
   <div class="wrap">
     <h2>Your path, step by step</h2>
-    <p class="section-lead">New to scholarships? Read these in order. Each guide is short and plain.</p>
-    <ol class="path">
-      ${guides
-        .map(
-          (g) => `<li><a href="/guides/${g.slug}/"><span class="path-title">${esc(g.title)}</span><span class="path-sum">${esc(g.summary)}</span></a></li>`
-        )
-        .join('\n')}
-    </ol>
+    <p class="section-lead">New to scholarships? Start in the first box and work across. Each guide is short and plain.</p>
+    <div class="cards cards-3">
+      ${(() => {
+        const blurb = { 'Start here': 'Begin here if this is all new to you.', Applications: 'Write, prepare and ask for help the right way.', 'Documents and travel': 'Papers, tests, money and getting there.' };
+        const homeCats = site.guideCategories.concat([...new Set(guides.map((g) => g.category))].filter((c) => c && !site.guideCategories.includes(c)));
+        return homeCats
+          .map((c, ci) => {
+            const list = guides.filter((g) => g.category === c);
+            if (!list.length) return '';
+            return `<article class="card gcard"><p class="eyebrow">Step ${ci + 1} &middot; ${list.length} guides</p><h3>${esc(c)}</h3><p class="gblurb">${esc(blurb[c] || '')}</p><ul>${list.map((g) => `<li><a href="/guides/${g.slug}/">${esc(g.title)}</a></li>`).join('')}</ul></article>`;
+          })
+          .join('\n');
+      })()}
+    </div>
+    <p class="more"><a class="btn btn-ghost" href="/guides/">See all guides</a></p>
   </div>
 </section>
 
@@ -485,8 +540,8 @@ function build() {
   <div class="wrap">
     <h2>Scholarships to look at now</h2>
     <p class="section-lead">Each one links to the official page and shows the date we last checked it.</p>
-    <div class="rows">
-      ${featured.map(scholarshipItem).join('\n')}
+    <div class="cards">
+      ${featured.map(scholarshipCard).join('\n')}
     </div>
     <p class="more"><a class="btn" href="/scholarships/">See all scholarships</a></p>
   </div>
@@ -602,9 +657,7 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
     const facts = [
       ['Country', s.country],
       ['Open to', s.open_to],
-      ['Funding', `<span class="inline-meter">${meter(f.level)} ${esc(f.label)}</span>`, true],
       ['Level', s.level],
-      ['Status', `<span class="badge ${stCls}"${closesOf(s) && st !== 'closed' ? ` data-closes="${closesOf(s)}"` : ''}>${stLabel}</span>`, true],
       ['Dates', s.deadline],
       ['Who can apply', s.who],
       ['What it covers', s.covers],
@@ -613,18 +666,25 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
 <article>
 <section class="page-head"><div class="wrap narrow">
   <p class="crumbs"><a href="/scholarships/">Scholarships</a></p>
+  <p class="chips"><span class="chip fund">${meter(f.level)} ${esc(f.label)}</span><span class="badge ${stCls}"${closesOf(s) && st !== 'closed' ? ` data-closes="${closesOf(s)}"` : ''}>${stLabel}</span>${closesOf(s) && st !== 'closed' ? `<span class="chip days" data-days="${closesOf(s)}"></span>` : ''}</p>
   <h1>${esc(s.title)}</h1>
   <p class="lead">${esc(s.summary)}</p>
-</div></section>
-<section class="section"><div class="wrap narrow">
-  <dl class="facts">
-    ${facts.map(([k, v, raw]) => `<div><dt>${k}</dt><dd>${raw ? v : esc(v)}</dd></div>`).join('\n')}
-  </dl>
   <p class="actions">
     ${s.official_link ? `<a class="btn" href="${esc(s.official_link)}" target="_blank" rel="noopener">Open the official page</a>` : ''}
     <a class="btn btn-ghost" href="${shareLink(s.title + ' (scholarship)', urlPath)}" target="_blank" rel="noopener">Share on WhatsApp</a>
   </p>
+</div></section>
+<section class="section"><div class="wrap narrow">
+  <dl class="facts">
+    ${(() => {
+      const isWide = facts.map((f2) => String(f2[1]).length > 70);
+      const shortIdx = isWide.map((w, i) => (w ? -1 : i)).filter((i) => i >= 0);
+      if (shortIdx.length % 2 === 1) isWide[shortIdx[shortIdx.length - 1]] = true;
+      return facts.map(([k, v, raw], i) => `<div${isWide[i] ? ' class="wide"' : ''}><dt>${k}</dt><dd>${raw ? v : esc(v)}</dd></div>`).join('\n');
+    })()}
+  </dl>
   ${s.verified ? `<p class="verified">Last checked against official sources on ${formatDate(s.verified)}. Dates and rules change, so confirm on the official page.</p>` : ''}
+  ${tocFrom(s.html)}
   <div class="prose">${s.html}</div>
   <p class="back"><a href="/scholarships/">All scholarships</a> &middot; <a href="/guides/how-scholarships-work-and-how-to-spot-scams/">How to spot scams</a></p>
 </div></section>
@@ -673,6 +733,7 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
   <p class="byline">${Math.max(1, Math.round(g.words / 200))} min read${g.verified ? ` &middot; Last checked ${formatDate(g.verified)}` : ''}</p>
 </div></section>
 <section class="section"><div class="wrap narrow">
+  ${tocFrom(g.html)}
   <div class="prose">${g.html}</div>
   <p class="actions"><a class="btn btn-ghost" href="${shareLink(g.title, urlPath)}" target="_blank" rel="noopener">Share on WhatsApp</a></p>
   <nav class="pager" aria-label="More guides">
