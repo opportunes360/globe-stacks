@@ -20,8 +20,10 @@ collections:
     extension: md
     fields:
       - { name: title, label: Name of the scholarship, widget: string }
-      - { name: country, label: Country, widget: string, hint: "Example: Japan. Use the same spelling every time so the filter works." }
-      - { name: funding, label: Funding type, widget: select, options: [{ label: Fully funded, value: Full }, { label: Partly funded, value: Partial }] }
+      - { name: country, label: Country you will study in, widget: string, hint: "Example: Japan. Use the same spelling every time so the filter works." }
+      - { name: eligible, label: "Eligible countries (for the filter)", widget: string, hint: "Type: all, or africa, or a list like: Kenya, Ghana, Nigeria, or unknown. Use the same country spelling as the filter." }
+      - { name: open_to, label: Open to students from, widget: string, hint: "Example: All African countries, or list the countries." }
+      - { name: funding, label: Funding type, widget: select, options: [{ label: "Fully funded (tuition and living costs)", value: Full }, { label: "Partly funded (covers part of the costs)", value: Partial }] }
       - { name: level, label: Study level, widget: string, default: Undergraduate }
       - { name: status, label: Status right now, widget: select, options: [{ label: Open now, value: open }, { label: Opens soon, value: upcoming }, { label: Closed for now, value: closed }, { label: Check dates, value: check }], default: check }
       - { name: deadline, label: Dates and deadline, widget: string, hint: "Write it exactly as on the official page, with the year." }
@@ -31,6 +33,7 @@ collections:
       - { name: official_link, label: Official link, widget: string, hint: "Start with https://" }
       - { name: verified, label: Date you last checked the official page, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
       - { name: featured, label: Show on the home page, widget: boolean, default: false }
+      - { name: draft, label: Hidden until ready, widget: boolean, default: false, required: false, hint: "Turn this on while you are still writing. Turn it off to show the page." }
       - { name: body, label: Full details, widget: markdown }
 
   - name: guides
@@ -44,6 +47,7 @@ collections:
       - { name: category, label: Group, widget: select, options: ["Start here", "Applications", "Documents and travel"] }
       - { name: order, label: Order in the learning path (1 is first), widget: number, value_type: int, min: 1 }
       - { name: summary, label: One-sentence summary, widget: text }
+      - { name: draft, label: Hidden until ready, widget: boolean, default: false, required: false, hint: "Turn this on while you are still writing. Turn it off to show the page." }
       - { name: verified, label: Date you last checked the facts, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
       - { name: body, label: Guide text, widget: markdown }
 
