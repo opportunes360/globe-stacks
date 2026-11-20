@@ -85,8 +85,15 @@ Each scholarship form in the editor has a calendar picker **Final application de
 - New round announced: change the `closes` date to the new date, set Status back to Open or Upcoming, and update the "Dates and deadline" text.
 - `content/deadlines.json` is only for extra dates (for example financial-aid forms), "expected" dates, and the "no date yet" list. Seven older scholarships (Berea, UBC, Dartmouth, Yale, Amherst, NYU Abu Dhabi, Reach Oxford) still use `"closes": true` rows there, and that keeps working.
 
-## Look and feel (2026-11-20, "friendly and youthful" polish)
-Same blue identity, warmer accent (orange for urgent days-left chips), rounder shapes, pill buttons, soft cards. Home page: stat pills, "Closing soon" cards (next 3 confirmed final deadlines, days counted in the browser), guides grouped into 3 step cards, scholarship cards. Scholarship pages: chips (funding, status, days left) and the Official page button at the top, facts as cards, "On this page" menu (also on guides). Phone menu fits all four links. No flag icons on purpose (Windows computers do not draw flag emoji). Styles are in `static/css/style.css` (new rules are at the bottom, under "Friendly polish"); pages are built in `build.js`.
+## Look and feel (2026-11-20, "friendly and youthful" + app feel)
+Same blue identity, warm orange accent, rounder shapes, soft glow shadows. Main changes:
+- **Bottom dock** (glass, icons only): Scholarships, Deadlines, Home (bigger, outlined, centre), Guides, Contact. The top text menu is gone. About, Privacy and Disclaimer are in the footer. Smooth page-to-page fade where the browser supports it.
+- **Sun/moon switch** in the top bar instead of the words Dark mode and Light mode.
+- **Minimal scholarship cards** (country with pin icon, status badge, short description, funding stack, Read more button) on the home page and on /scholarships/. The short description is the first sentence of `summary`, cut to about 96 characters.
+- **Home page as a landing page:** welcome hero (with optional photo and parallax), two tickers moving in opposite directions (deadlines coming up, and all scholarships), four flip cards that lead to the main menus, a parallax photo band, scholarship cards, and a promise section. Fly-in, zoom and reveal animations. All animations switch off for people who use "reduce motion".
+- **Loading screen** for the installed app only: the stacks fall and the globe lands, looping until the page is ready (at least 2 seconds, once per session). The very first moment (the phone's own splash) is shown by Android or iOS and cannot be animated; it uses the app icon on navy.
+- **Photos are optional:** put `hero-1.jpg` and `hero-2.jpg` in `static/images/` (see the README.txt there). Without them a blue design shows.
+- Styles: `static/css/style.css` (newest rules at the bottom). Pages: `build.js`. Behaviour: `static/js/app.js`.
 
 ## Site checks done
 2026-11-20: all 40 pages tested on phone (390 px) and desktop. No broken internal links, no browser errors. Fixed: long web addresses and wide tables overflowing on phones. Filters, Deadlines page and install manifest tested. Not tested by Claude: the /admin/ editor sign-in (needs your token), and the installed app on a real phone.

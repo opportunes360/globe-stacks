@@ -339,18 +339,57 @@ function tocFrom(html) {
   if (items.length < 3) return '';
   return `<details class="toc"><summary>On this page <span>${items.length} sections</span></summary><ol>${items.map(([i, t]) => `<li><a href="#${i}">${t}</a></li>`).join('')}</ol></details>`;
 }
-function scholarshipCard(s) {
+/* ---------- icons, short text, minimal cards, splash ---------- */
+const ICONS = {
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/>',
+  cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/><path d="M22 9v6"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h2M12 14h2M8 17h2"/>',
+  book: '<path d="M4 4.5C4 3.7 4.7 3 5.5 3H20v16H5.5C4.7 19 4 19.7 4 20.5z"/><path d="M4 20.5C4 21.3 4.7 22 5.5 22H20v-3"/><path d="M8.5 7.5h7"/>',
+  chat: '<path d="M20.5 12c0 4.1-3.8 7.5-8.5 7.5-1.2 0-2.3-.2-3.3-.6L4 20l1.3-3.7C4.2 15.1 3.5 13.6 3.5 12c0-4.1 3.8-7.5 8.5-7.5s8.5 3.4 8.5 7.5z"/>',
+  pin: '<path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/>',
+  moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+};
+const icon = (name, cls = 'ic') =>
+  `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name]}</svg>`;
+
+function shortText(t, n = 96) {
+  const s = String(t || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= n) return s;
+  const first = s.match(/^.*?[.!?](\s|$)/);
+  if (first && first[0].trim().length <= n && first[0].trim().length >= 40) return first[0].trim();
+  const cut = s.slice(0, n);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:\-\s]+$/, '') + '…';
+}
+
+/* Minimal scholarship card. asItem=true adds the data-* attributes the filters on /scholarships/ need. */
+function scholarshipCard(s, asItem = false) {
   const f = fundingInfo(s.funding);
   const st = effStatus(s);
   const [stLabel, stCls] = statusInfo(st);
   const cl = closesOf(s);
   const live = cl && st !== 'closed';
-  return `<article class="card scard">
-  <div class="chips"><span class="chip">${esc(s.country)}</span><span class="chip fund">${meter(f.level)} ${esc(f.label)}</span></div>
+  const hay = [s.title, s.country, s.open_to, s.level, s.summary, f.label].join(' ').toLowerCase();
+  const attrs = asItem
+    ? ` data-item data-country="${esc(s.country)}" data-funding="${esc(s.funding)}" data-status="${esc(st)}"${live ? ` data-closes="${cl}"` : ''} data-eligible="${esc(eligibleAttr(s))}" data-hay="${esc(hay)}"`
+    : '';
+  return `<article class="card mcard reveal"${attrs}>
+  <div class="mcard-top"><span class="loc">${icon('pin')}${esc(s.country)}</span><span class="badge ${stCls}"${live && !asItem ? ` data-closes="${cl}"` : ''}>${stLabel}</span></div>
   <h3><a class="card-link" href="/scholarships/${s.slug}/">${esc(s.title)}</a></h3>
-  <p class="clamp">${esc(s.summary)}</p>
-  <p class="card-foot"><span class="badge ${stCls}"${live ? ` data-closes="${cl}"` : ''}>${stLabel}</span>${live ? `<span class="chip days" data-days="${cl}"></span>` : ''}</p>
+  <p class="mdesc">${esc(shortText(s.summary))}</p>
+  <div class="mcard-foot"><span class="fund" title="${esc(f.label)}">${meter(f.level)}<span>${esc(f.label)}</span></span><span class="btn btn-sm" aria-hidden="true">Read more ${icon('arrow')}</span></div>
 </article>`;
+}
+
+/* Animated logo for the loading screen (stacks fall, then the globe lands). */
+function splashSvg() {
+  return `<svg class="sp-mark" viewBox="0 0 64 64" width="132" height="132" aria-hidden="true" focusable="false">
+<g class="sp sp-1"><path class="a" d="M32 46 L58 54 L32 62 L6 54 Z"/></g>
+<g class="sp sp-2"><path class="b" d="M32 38 L58 46 L32 54 L6 46 Z"/></g>
+<g class="sp sp-3"><path class="c" d="M32 30 L58 38 L32 46 L6 38 Z"/></g>
+<g class="sp sp-g"><circle class="gb" cx="32" cy="20" r="16"/><ellipse class="gl" cx="32" cy="20" rx="7" ry="16" fill="none"/><path class="gl" d="M17.2 14 H46.8 M16 20 H48 M17.2 26 H46.8" fill="none"/></g>
+</svg>`;
 }
 
 function scholarshipItem(s) {
@@ -371,17 +410,19 @@ function scholarshipItem(s) {
 
 function layout({ title, desc, urlPath, body, noindex, active }) {
   const fullTitle = urlPath === '/' ? `${site.name}: ${site.tagline}` : `${title} | ${site.name}`;
-  const nav = [
-    ['/scholarships/', 'Scholarships'],
-    ['/guides/', 'Guides'],
-    ['/deadlines/', 'Deadlines'],
-    ['/about/', 'About'],
+  const dock = [
+    ['/scholarships/', 'Scholarships', 'cap'],
+    ['/deadlines/', 'Deadlines', 'calendar'],
+    ['/', 'Home', 'home'],
+    ['/guides/', 'Guides', 'book'],
+    ['/contact/', 'Contact', 'chat'],
   ];
+  const isCur = (h) => (h === '/' ? urlPath === '/' : active === h || urlPath.startsWith(h));
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(desc || site.description)}">
 ${noindex ? '<meta name="robots" content="noindex">' : ''}
@@ -395,21 +436,19 @@ ${noindex ? '<meta name="robots" content="noindex">' : ''}
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<script>try{var t=localStorage.getItem('gs-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script>try{var d=document.documentElement;d.classList.add('js');var t=localStorage.getItem('gs-theme');if(t)d.setAttribute('data-theme',t);var sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;if(sa&&!sessionStorage.getItem('gs-splash')){d.classList.add('splash-on');sessionStorage.setItem('gs-splash','1')}}catch(e){}</script>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="splash" id="splash" aria-hidden="true">${splashSvg()}<p class="sp-name">${esc(site.name)}</p><p class="sp-dots"><i></i><i></i><i></i></p></div>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap header-in">
     <a class="brand" href="/" aria-label="${esc(site.name)} home">${markSvg('mark', 34)}<span>${esc(site.name)}</span></a>
     <div class="tools">
       <button class="btn-quiet" id="install" type="button" hidden>Install app</button>
-      <button class="btn-quiet" id="theme" type="button" aria-label="Switch colour theme">Dark mode</button>
+      <button class="theme-switch" id="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode">${icon('sun', 'ic ic-sun')}${icon('moon', 'ic ic-moon')}<span class="knob"></span></button>
     </div>
-    <nav class="nav" aria-label="Main">
-      ${nav.map(([h, l]) => `<a href="${h}"${active === h ? ' aria-current="page"' : ''}>${l}</a>`).join('')}
-    </nav>
   </div>
 </header>
 <main id="main">
@@ -442,6 +481,9 @@ ${body}
   </div>
   <div class="wrap foot-base"><p>&copy; ${new Date().getFullYear()} ${esc(site.name)}</p></div>
 </footer>
+<nav class="dock" aria-label="Main"><div class="dock-in">
+${dock.map(([h, l, ic]) => `  <a class="dock-a${h === '/' ? ' dock-home' : ''}" href="${h}" aria-label="${l}" title="${l}"${isCur(h) ? ' aria-current="page"' : ''}>${icon(ic)}<span class="dock-dot"></span></a>`).join('\n')}
+</div></nav>
 <script src="/js/app.js" defer></script>
 </body>
 </html>`;
@@ -470,96 +512,113 @@ function build() {
   /* Home */
   const featured = scholarships.filter((s) => s.featured).slice(0, 4);
   const bySlugHome = Object.fromEntries(scholarships.map((x) => [x.slug, x]));
+  const imgOk = (f) => fs.existsSync(path.join(ROOT, 'static', 'images', f));
+  const heroPhoto = imgOk('hero-1.jpg') ? '/images/hero-1.jpg' : '';
+  const bandPhoto = imgOk('hero-2.jpg') ? '/images/hero-2.jpg' : '';
+  const ticker = (items, cls) => {
+    let list = items;
+    while (list.length && list.length < 8) list = list.concat(items);
+    const half = list.join('');
+    const clone = half.replace(/<a /g, '<a tabindex="-1" ');
+    return `<div class="marquee ${cls}"><div class="track"><div class="half">${half}</div><div class="half" aria-hidden="true">${clone}</div></div></div>`;
+  };
+  const soonItems = upcomingFinal(scholarships)
+    .filter((d) => bySlugHome[d.slug])
+    .map(
+      (d) =>
+        `<a class="tick-card" href="/scholarships/${d.slug}/"><span class="chip days" data-days="${d.date}"></span><strong>${esc(bySlugHome[d.slug].title)}</strong><span class="tick-sub">${esc(bySlugHome[d.slug].country)} &middot; ${formatDate(d.date)}</span></a>`
+    );
+  const allItems = scholarships.map(
+    (s) =>
+      `<a class="tick-pill" href="/scholarships/${s.slug}/"><span class="loc">${icon('pin')}${esc(s.country)}</span><strong>${esc(s.title)}</strong>${meter(fundingInfo(s.funding).level)}</a>`
+  );
+  const doors = [
+    ['cap', 'Scholarships', 'Find your match', 'Browse fully and partly funded undergraduate scholarships for African students. Filter by your own country.', '/scholarships/', 'Browse scholarships', 'reveal-left'],
+    ['book', 'Guides', 'Learn step by step', 'Personal statements, visas, passports, tests and more, written in plain words.', '/guides/', 'Open the guides', 'reveal-up'],
+    ['calendar', 'Deadlines', 'Never miss a date', 'Every confirmed deadline in one list, with the days left counted for you.', '/deadlines/', 'See deadlines', 'reveal-up'],
+    ['chat', 'Talk to us', 'We are here to help', 'Have a question, or a scholarship to suggest? Send us a message on WhatsApp.', '/contact/', 'Contact us', 'reveal-right'],
+  ];
   const homeBody = `
-<section class="hero">
-  <div class="wrap hero-in">
-    <div class="hero-copy">
-      <h1>Win a scholarship without paying an agent.</h1>
-      <p class="lead">Free, step-by-step guides on scholarships, personal statements, passports and visas, written for African students who are finishing school.</p>
-      <form class="hero-search" action="/scholarships/" method="get" role="search">
-        <label for="hq" class="vh">Search scholarships by name or country</label>
-        <input id="hq" name="q" type="search" placeholder="Try &ldquo;Japan&rdquo; or &ldquo;fully funded&rdquo;" autocomplete="off">
-        <button class="btn" type="submit">Search</button>
-      </form>
-      <p class="hero-links"><a class="btn btn-ghost" href="/guides/">Start with the guides</a><a class="btn btn-ghost" href="/scholarships/">Browse all scholarships</a></p>
-      <ul class="hero-stats"><li><strong>${scholarships.length}</strong> scholarships</li><li><strong>${guides.length}</strong> guides</li><li><strong>Free</strong> for everyone</li></ul>
-    </div>
-    <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 420 380" role="img" focusable="false">
-        <g class="slab sl-part"><path class="face-l" d="M60 290 L210 330 L210 346 L60 306 Z"/><path class="face-r" d="M360 290 L210 330 L210 346 L360 306 Z"/><path class="top" d="M210 250 L360 290 L210 330 L60 290 Z"/></g>
-        <g class="slab sl-full"><path class="face-l" d="M60 250 L210 290 L210 306 L60 266 Z"/><path class="face-r" d="M360 250 L210 290 L210 306 L360 266 Z"/><path class="top" d="M210 210 L360 250 L210 290 L60 250 Z"/></g>
-        <g class="globe"><circle cx="210" cy="140" r="84"/><ellipse cx="210" cy="140" rx="36" ry="84"/><path d="M210 56 V224 M126 140 H294 M137 98 H283 M137 182 H283"/></g>
-      </svg>
-    </div>
-  </div>
-</section>
-<section class="legend-strip" aria-label="How to read the stacks">
-  <div class="wrap legend">
-    <span class="legend-title">Reading the stacks</span>
-    <span class="legend-item">${meter(3)} Fully funded</span>
-    <span class="legend-item">${meter(2)} Partly funded</span>
+<section class="hero2" data-parallax-root>
+  <div class="hero2-bg" data-speed="0.28">${
+    heroPhoto
+      ? `<img src="${heroPhoto}" alt="" decoding="async" fetchpriority="high">`
+      : `<span class="orb o1" data-speed="-0.12"></span><span class="orb o2" data-speed="0.1"></span>`
+  }</div>
+  <div class="hero2-shade"></div>
+  ${heroPhoto ? '' : `<svg class="hero2-art" data-speed="-0.1" viewBox="0 0 420 380" focusable="false" aria-hidden="true"><g class="slab sl-part"><path class="face-l" d="M60 290 L210 330 L210 346 L60 306 Z"/><path class="face-r" d="M360 290 L210 330 L210 346 L360 306 Z"/><path class="top" d="M210 250 L360 290 L210 330 L60 290 Z"/></g><g class="slab sl-full"><path class="face-l" d="M60 250 L210 290 L210 306 L60 266 Z"/><path class="face-r" d="M360 250 L210 290 L210 306 L360 266 Z"/><path class="top" d="M210 210 L360 250 L210 290 L60 250 Z"/></g><g class="globe"><circle cx="210" cy="140" r="84"/><ellipse cx="210" cy="140" rx="36" ry="84"/><path d="M210 56 V224 M126 140 H294 M137 98 H283 M137 182 H283"/></g></svg>`}
+  <div class="wrap hero2-in">
+    <p class="kicker reveal">Karibu &middot; Welcome</p>
+    <h1 class="reveal d1">Win a scholarship without paying an agent.</h1>
+    <p class="lead reveal d2">Hello, future scholar. We are glad you are here. Everything on this site is free, checked against the official pages, and written in plain words for African students.</p>
+    <form class="hero-search reveal d3" action="/scholarships/" method="get" role="search">
+      <label for="hq" class="vh">Search scholarships by name or country</label>
+      <input id="hq" name="q" type="search" placeholder="Try &ldquo;Japan&rdquo; or &ldquo;fully funded&rdquo;" autocomplete="off">
+      <button class="btn" type="submit">Search</button>
+    </form>
+    <ul class="glass-stats reveal d4"><li><strong>${scholarships.length}</strong> scholarships</li><li><strong>${guides.length}</strong> guides</li><li><strong>Free</strong> for everyone</li></ul>
   </div>
 </section>
 
-${(() => {
-  const soon = upcomingFinal(scholarships).slice(0, 3).filter((d) => bySlugHome[d.slug]);
-  if (!soon.length) return '';
-  return `<section class="section soon">
-  <div class="wrap">
-    <h2>Closing soon</h2>
-    <p class="section-lead">The next final deadlines we have confirmed. <a href="/deadlines/">See every date</a>.</p>
-    <div class="cards cards-3 scroll">
-      ${soon.map((d) => `<article class="card dcard"><span class="chip days" data-days="${d.date}"></span><h3><a class="card-link" href="/scholarships/${d.slug}/">${esc(bySlugHome[d.slug].title)}</a></h3><p>${esc(d.what)} &middot; ${formatDate(d.date)}</p></article>`).join('\n')}
-    </div>
-  </div>
-</section>`;
-})()}
+<section class="section tick-sec">
+  <div class="wrap"><h2 class="reveal">Happening now</h2><p class="section-lead reveal d1">Deadlines coming up, and every scholarship we cover. Tap any card to read more.</p></div>
+  ${soonItems.length ? ticker(soonItems, 'to-left') : ''}
+  ${ticker(allItems, 'to-right')}
+</section>
 
 <section class="section">
   <div class="wrap">
-    <h2>Your path, step by step</h2>
-    <p class="section-lead">New to scholarships? Start in the first box and work across. Each guide is short and plain.</p>
-    <div class="cards cards-3">
-      ${(() => {
-        const blurb = { 'Start here': 'Begin here if this is all new to you.', Applications: 'Write, prepare and ask for help the right way.', 'Documents and travel': 'Papers, tests, money and getting there.' };
-        const homeCats = site.guideCategories.concat([...new Set(guides.map((g) => g.category))].filter((c) => c && !site.guideCategories.includes(c)));
-        return homeCats
-          .map((c, ci) => {
-            const list = guides.filter((g) => g.category === c);
-            if (!list.length) return '';
-            return `<article class="card gcard"><p class="eyebrow">Step ${ci + 1} &middot; ${list.length} guides</p><h3>${esc(c)}</h3><p class="gblurb">${esc(blurb[c] || '')}</p><ul>${list.map((g) => `<li><a href="/guides/${g.slug}/">${esc(g.title)}</a></li>`).join('')}</ul></article>`;
-          })
-          .join('\n');
-      })()}
+    <h2 class="reveal">Where would you like to go?</h2>
+    <p class="section-lead reveal d1">Pick a card. Each one opens a different part of the site.</p>
+    <div class="doors">
+      ${doors
+        .map(
+          ([ic, name, front, back, href, cta, anim], i) => `<div class="flip reveal ${anim} d${i + 1}" tabindex="0" role="group" aria-label="${esc(name)}">
+        <div class="flip-in">
+          <div class="flip-face flip-front"><span class="door-ic">${icon(ic)}</span><h3>${esc(name)}</h3><p>${esc(front)}</p><span class="tap-hint">Tap to flip</span></div>
+          <div class="flip-face flip-back"><h3>${esc(name)}</h3><p>${esc(back)}</p><a class="btn btn-light" href="${href}">${esc(cta)} ${icon('arrow')}</a></div>
+        </div>
+      </div>`
+        )
+        .join('\n')}
     </div>
-    <p class="more"><a class="btn btn-ghost" href="/guides/">See all guides</a></p>
+  </div>
+</section>
+
+<section class="band" data-parallax-root>
+  <div class="band-bg" data-speed="0.22">${bandPhoto ? `<img src="${bandPhoto}" alt="" loading="lazy" decoding="async">` : ''}</div>
+  <div class="band-shade"></div>
+  <div class="wrap band-in">
+    <h2 class="reveal reveal-left">Your story deserves a funded chapter.</h2>
+    <p class="reveal reveal-left d1">Thousands of African students win scholarships every year. Start with one guide today, and take it one step at a time.</p>
+    <p class="reveal d2"><a class="btn btn-light" href="/guides/how-scholarships-work-and-how-to-spot-scams/">Start with the basics ${icon('arrow')}</a></p>
   </div>
 </section>
 
 <section class="section section-tint">
   <div class="wrap">
-    <h2>Scholarships to look at now</h2>
-    <p class="section-lead">Each one links to the official page and shows the date we last checked it.</p>
+    <h2 class="reveal">Scholarships to look at now</h2>
+    <p class="section-lead reveal d1">The stack shows how much is covered. ${meter(3)} Fully funded &nbsp; ${meter(2)} Partly funded</p>
     <div class="cards">
-      ${featured.map(scholarshipCard).join('\n')}
+      ${featured.map((s) => scholarshipCard(s)).join('\n')}
     </div>
-    <p class="more"><a class="btn" href="/scholarships/">See all scholarships</a></p>
+    <p class="more"><a class="btn" href="/scholarships/">See all scholarships ${icon('arrow')}</a></p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap promise">
-    <h2>What you can expect from us</h2>
-    <dl>
-      <dt>It is free.</dt><dd>No sign-up, no fees. If anyone asks you to pay to &ldquo;secure&rdquo; a scholarship, walk away.</dd>
-      <dt>It is checked.</dt><dd>We read the official pages ourselves and show the date each page was last checked.</dd>
-      <dt>It is honest.</dt><dd>Fully funded places are competitive. We tell you the odds, and we list partly funded options too.</dd>
-    </dl>
+    <h2 class="reveal">What you can expect from us</h2>
+    <div class="cards cards-3">
+      <article class="card pcard reveal reveal-zoom d1"><h3>It is free.</h3><p>No sign-up, no fees. If anyone asks you to pay to &ldquo;secure&rdquo; a scholarship, walk away.</p></article>
+      <article class="card pcard reveal reveal-zoom d2"><h3>It is checked.</h3><p>We read the official pages ourselves and show the date each page was last checked.</p></article>
+      <article class="card pcard reveal reveal-zoom d3"><h3>It is honest.</h3><p>Fully funded places are competitive. We tell you the odds, and we list partly funded options too.</p></article>
+    </div>
   </div>
 </section>
 
 <section class="section cta">
-  <div class="wrap cta-in">
+  <div class="wrap cta-in reveal">
     <div>
       <h2>Questions, or a scholarship to suggest?</h2>
       <p>Message us on WhatsApp and we will reply as soon as we can.</p>
@@ -572,6 +631,7 @@ ${(() => {
       : ''
   }
 </section>`;
+
   addPage('/', layout({ title: site.name, desc: site.description, urlPath: '/', body: homeBody }), 1.0);
 
   /* Scholarships index */
@@ -593,8 +653,8 @@ ${(() => {
     <div class="field field-btn"><button class="btn btn-ghost" type="reset" id="clear">Clear</button></div>
   </form>
   <p id="count" class="count" aria-live="polite"></p>
-  <div class="rows" id="list">
-    ${scholarships.map(scholarshipItem).join('\n')}
+  <div class="cards cards-3" id="list">
+    ${scholarships.map((x) => scholarshipCard(x, true)).join('\n')}
   </div>
   <p id="none" class="empty" hidden>No scholarships match. Clear the filters, or <a href="${waLink('Hello Globe Stacks, please add this scholarship: ')}" target="_blank" rel="noopener">tell us on WhatsApp</a> which one you are looking for.</p>
 </div></section>`;
