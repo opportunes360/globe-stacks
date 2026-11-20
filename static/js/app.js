@@ -25,27 +25,41 @@
     });
   }
 
-  /* Install button (shows only when the browser says the app can be installed) */
+  /* Install pop-up (Android/Chrome): shows Chrome's own install box when the person taps Install */
   var deferred = null;
-  var installBtn = document.getElementById('install');
+  var pop = document.getElementById('pwa-pop');
+  var seenKey = 'gs-pwa-later';
+  var recently = function () { try { var t = +localStorage.getItem(seenKey) || 0; return Date.now() - t < 6048e5; } catch (e) { return false; } };
+  var hidePop = function () { if (pop) { pop.classList.remove('show'); setTimeout(function () { pop.hidden = true; }, 350); } };
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     deferred = e;
-    if (installBtn) installBtn.hidden = false;
+    if (!pop || recently()) return;
+    setTimeout(function () { pop.hidden = false; void pop.offsetWidth; pop.classList.add('show'); }, 2500);
   });
-  if (installBtn) {
-    installBtn.addEventListener('click', function () {
+  if (pop) {
+    document.getElementById('pwa-yes').addEventListener('click', function () {
       if (!deferred) return;
       deferred.prompt();
-      deferred.userChoice.then(function () {
-        deferred = null;
-        installBtn.hidden = true;
-      });
+      deferred.userChoice.then(function () { deferred = null; hidePop(); });
+    });
+    document.getElementById('pwa-no').addEventListener('click', function () {
+      try { localStorage.setItem(seenKey, String(Date.now())); } catch (e) {}
+      hidePop();
     });
   }
-  window.addEventListener('appinstalled', function () {
-    if (installBtn) installBtn.hidden = true;
-  });
+  window.addEventListener('appinstalled', hidePop);
+
+  /* Warm the next page the moment a finger touches a link, so it opens at once */
+  var warmed = {};
+  var warm = function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="/"]');
+    if (!a || warmed[a.href] || a.target) return;
+    warmed[a.href] = 1;
+    try { fetch(a.href, { credentials: 'same-origin' }); } catch (x) {}
+  };
+  document.addEventListener('touchstart', warm, { passive: true });
+  document.addEventListener('mouseover', warm, { passive: true });
 
   /* Service worker (offline reading) */
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
@@ -71,7 +85,7 @@
     var tday = Date.parse(today + 'T00:00:00Z');
     document.querySelectorAll('[data-days]').forEach(function (el) {
       var n = Math.round((Date.parse(el.getAttribute('data-days') + 'T00:00:00Z') - tday) / 864e5);
-      if (n < 0) { el.hidden = true; return; }
+      if (n < 0) { el.hidden = true; var tc = el.closest('.tick-card'); if (tc) tc.hidden = true; return; }
       el.textContent = n === 0 ? 'Last day' : n === 1 ? '1 day left' : n + ' days left';
       el.classList.add(n <= 14 ? 'urgent' : n <= 45 ? 'warn' : 'calm');
     });
