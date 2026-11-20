@@ -27,7 +27,7 @@ collections:
       - { name: level, label: Study level, widget: string, default: Undergraduate }
       - { name: status, label: Status right now, widget: select, options: [{ label: Open now, value: open }, { label: Opens soon, value: upcoming }, { label: Closed for now, value: closed }, { label: Check dates, value: check }], default: check }
       - { name: deadline, label: Dates and deadline, widget: string, hint: "Write it exactly as on the official page, with the year." }
-      - { name: closes, label: "Final application deadline (date, optional)", widget: string, required: false, pattern: ['^\d{4}-\d{2}-\d{2}$', "Write it like 2027-01-31 (year-month-day)"], hint: "Only when the official page gives a confirmed final date. Type it like 2027-01-31. After this date the site marks the scholarship Closed by itself and removes it from the Deadlines page. Leave empty if the date is not confirmed." }
+      - { name: closes, label: "Final application deadline (optional)", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false, hint: "Pick the date from the calendar, only when the official page gives a confirmed final date. After this date the site marks the scholarship Closed by itself and removes it from the Deadlines page. Leave empty if the date is not confirmed." }
       - { name: summary, label: One-sentence summary, widget: text }
       - { name: who, label: Who can apply, widget: string, required: false }
       - { name: covers, label: What it covers, widget: string, required: false }
