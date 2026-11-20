@@ -51,6 +51,18 @@
     });
   }
 
+  /* Auto-close: mark scholarships closed once their final deadline has passed */
+  try {
+    var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Dar_es_Salaam' }).format(new Date());
+    document.querySelectorAll('[data-closes]').forEach(function (el) {
+      if (today > el.getAttribute('data-closes')) {
+        if (el.hasAttribute('data-status')) el.setAttribute('data-status', 'closed');
+        var b = el.classList.contains('badge') ? el : el.querySelector('.badge');
+        if (b && /\b(ok|soon)\b/.test(b.className)) { b.className = 'badge closed'; b.textContent = 'Closed for now'; }
+      }
+    });
+  } catch (e) {}
+
   /* Scholarship filters */
   var form = document.getElementById('filters');
   if (form) {
