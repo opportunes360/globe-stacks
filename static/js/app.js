@@ -63,6 +63,7 @@
     var apply = function () {
       var q = form.elements.q.value.trim().toLowerCase();
       var country = form.elements.country.value;
+      var mine = form.elements.mine ? form.elements.mine.value : '';
       var funding = form.elements.funding.value;
       var status = form.elements.status.value;
       var shown = 0;
@@ -70,6 +71,12 @@
         var ok =
           (!q || q.split(/\s+/).every(function (w) { return el.getAttribute('data-hay').indexOf(w) !== -1; })) &&
           (!country || el.getAttribute('data-country') === country) &&
+          (!mine || (function () {
+            var e = el.getAttribute('data-eligible');
+            if (e === '*' || e === '?') return true;
+            if (mine === '__other') return false;
+            return e.split('|').indexOf(mine) !== -1;
+          })()) &&
           (!funding || el.getAttribute('data-funding') === funding) &&
           (!status || el.getAttribute('data-status') === status);
         el.hidden = !ok;
