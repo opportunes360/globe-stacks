@@ -375,7 +375,7 @@ function scholarshipCard(s, asItem = false) {
     ? ` data-item data-country="${esc(s.country)}" data-funding="${esc(s.funding)}" data-status="${esc(st)}"${live ? ` data-closes="${cl}"` : ''} data-eligible="${esc(eligibleAttr(s))}" data-hay="${esc(hay)}"`
     : '';
   return `<article class="card mcard reveal"${attrs}>
-  <div class="mcard-top"><span class="loc">${icon('pin')}${esc(s.country)}</span><span class="badge ${stCls}"${live && !asItem ? ` data-closes="${cl}"` : ''}>${stLabel}</span></div>
+  <div class="mcard-top"><span class="loc">${icon('pin')}<span class="loc-t">${esc(s.country)}</span></span><span class="badge ${stCls}"${live && !asItem ? ` data-closes="${cl}"` : ''}>${stLabel}</span></div>
   <h3><a class="card-link" href="/scholarships/${s.slug}/">${esc(s.title)}</a></h3>
   <p class="mdesc">${esc(shortText(s.summary))}</p>
   <div class="mcard-foot"><span class="fund" title="${esc(f.label)}">${meter(f.level)}<span>${esc(f.label)}</span></span><span class="btn btn-sm" aria-hidden="true">Read more ${icon('arrow')}</span></div>
@@ -410,6 +410,7 @@ function scholarshipItem(s) {
 
 const crypto = require('crypto');
 const fileHash = (f) => { try { return crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT, 'static', f))).digest('hex').slice(0, 8); } catch (e) { return 'x'; } };
+const SPLASH_CSS = (() => { try { return fs.readFileSync(path.join(ROOT, 'static', 'css', 'splash.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim(); } catch (e) { return ''; } })();
 const CSS_URL = `/css/style.${fileHash('css/style.css')}.css`;
 const JS_URL = `/js/app.${fileHash('js/app.js')}.js`;
 
@@ -442,11 +443,13 @@ ${noindex ? '<meta name="robots" content="noindex">' : ''}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>try{var d=document.documentElement;d.classList.add('js');var t=localStorage.getItem('gs-theme');if(t)d.setAttribute('data-theme',t);var sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;if(sa&&!sessionStorage.getItem('gs-splash')){d.classList.add('splash-on');sessionStorage.setItem('gs-splash','1')}}catch(e){}</script>
+<style>${SPLASH_CSS}</style>
 <style>html{background:#f6f9fe}html[data-theme=dark]{background:#08182c}@media(prefers-color-scheme:dark){html:not([data-theme=light]){background:#08182c}}</style>
 <link rel="stylesheet" href="${CSS_URL}" onerror="this.onerror=null;this.href='${CSS_URL}?r='+Date.now()">
 </head>
 <body>
 <div class="splash" id="splash" aria-hidden="true">${splashSvg()}<p class="sp-name">${esc(site.name)}</p><p class="sp-dots"><i></i><i></i><i></i></p></div>
+<script>window.__sp0=Date.now()</script>
 <div class="pwa-pop" id="pwa-pop" role="dialog" aria-label="Install Globe Stacks" hidden><div class="pwa-card">${markSvg('mark', 44)}<div class="pwa-txt"><strong>Install Globe Stacks</strong><span>Open it like an app and read offline. It is free.</span></div><div class="pwa-act"><button type="button" class="btn btn-sm" id="pwa-yes">Install</button><button type="button" class="pwa-no" id="pwa-no" aria-label="Not now">Not now</button></div></div></div>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
@@ -510,7 +513,10 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'static', 'css', 'style.css'), path.join(DIST, CSS_URL));
   fs.copyFileSync(path.join(ROOT, 'static', 'js', 'app.js'), path.join(DIST, JS_URL));
 
-  const guides = loadCollection('guides').sort((a, b) => Number(a.order || 99) - Number(b.order || 99));
+  const catRank = (c) => { const i = site.guideCategories.indexOf(c); return i === -1 ? 99 : i; };
+  const guides = loadCollection('guides').sort(
+    (a, b) => catRank(a.category) - catRank(b.category) || Number(a.order || 99) - Number(b.order || 99) || String(a.title).localeCompare(String(b.title))
+  );
   const scholarships = loadCollection('scholarships').sort((a, b) => {
     const rank = { open: 0, upcoming: 1, check: 2, closed: 3 };
     return (rank[a.status] ?? 2) - (rank[b.status] ?? 2) || String(a.title).localeCompare(String(b.title));
@@ -556,7 +562,7 @@ function build() {
   <div class="hero2-shade"></div>
   ${heroPhoto ? '' : `<svg class="hero2-art" data-speed="-0.1" viewBox="0 0 420 380" focusable="false" aria-hidden="true"><g class="slab sl-part"><path class="face-l" d="M60 290 L210 330 L210 346 L60 306 Z"/><path class="face-r" d="M360 290 L210 330 L210 346 L360 306 Z"/><path class="top" d="M210 250 L360 290 L210 330 L60 290 Z"/></g><g class="slab sl-full"><path class="face-l" d="M60 250 L210 290 L210 306 L60 266 Z"/><path class="face-r" d="M360 250 L210 290 L210 306 L360 266 Z"/><path class="top" d="M210 210 L360 250 L210 290 L60 250 Z"/></g><g class="globe"><circle cx="210" cy="140" r="84"/><ellipse cx="210" cy="140" rx="36" ry="84"/><path d="M210 56 V224 M126 140 H294 M137 98 H283 M137 182 H283"/></g></svg>`}
   <div class="wrap hero2-in">
-    <p class="kicker reveal">Karibu &middot; Welcome</p>
+    <p class="kicker reveal">Welcome</p>
     <h1 class="reveal d1">Win a scholarship without paying an agent.</h1>
     <p class="lead reveal d2">Hello, future scholar. We are glad you are here. Everything on this site is free, checked against the official pages, and written in plain words for African students.</p>
     <form class="hero-search reveal d3" action="/scholarships/" method="get" role="search">
@@ -564,7 +570,6 @@ function build() {
       <input id="hq" name="q" type="search" placeholder="Try &ldquo;Japan&rdquo; or &ldquo;fully funded&rdquo;" autocomplete="off">
       <button class="btn" type="submit">Search</button>
     </form>
-    <ul class="glass-stats reveal d4"><li><strong>${scholarships.length}</strong> scholarships</li><li><strong>${guides.length}</strong> guides</li><li><strong>Free</strong> for everyone</li></ul>
   </div>
 </section>
 
@@ -686,6 +691,7 @@ function build() {
     <h3><a href="/scholarships/${d.slug}/">${esc(bySlug[d.slug].title)}</a></h3>
     <p class="row-meta"><span>${esc(d.what)}</span></p>
     ${d.note ? `<p>${esc(d.note)}</p>` : ''}
+    <p class="dl-act"><a class="btn btn-sm" href="/scholarships/${d.slug}/">Read more ${icon('arrow')}</a></p>
   </div>
 </article>`;
     const sure = upcoming.filter((d) => d.kind === 'confirmed');
@@ -700,19 +706,10 @@ function build() {
   <h2>Confirmed dates</h2>
   ${sure.length ? `<div class="rows">${sure.map(rowHtml).join('\n')}</div>` : '<p>No confirmed upcoming dates right now. Check the scholarships page.</p>'}
   ${guess.length ? `<h2 class="cat">Expected, but not confirmed</h2><p>These dates are guesses from earlier years. Do not plan around them until the official page confirms them.</p><div class="rows">${guess.map(rowHtml).join('\n')}</div>` : ''}
-  ${none.length ? `<h2 class="cat">No date yet</h2><div class="rows">${none.map((d) => `<article class="row dl-row"><div class="dl-date"><strong>Not confirmed</strong></div><div class="row-main"><h3><a href="/scholarships/${d.slug}/">${esc(bySlug[d.slug].title)}</a></h3><p>${esc(d.text)}</p></div></article>`).join('\n')}</div>` : ''}
+  ${none.length ? `<h2 class="cat">No date yet</h2><div class="rows">${none.map((d) => `<article class="row dl-row"><div class="dl-date"><strong>Not confirmed</strong></div><div class="row-main"><h3><a href="/scholarships/${d.slug}/">${esc(bySlug[d.slug].title)}</a></h3><p>${esc(d.text)}</p><p class="dl-act"><a class="btn btn-sm" href="/scholarships/${d.slug}/">Read more ${icon('arrow')}</a></p></div></article>`).join('\n')}</div>` : ''}
   <p class="verified">Days left are counted from today's date in Tanzania. Some official pages print the day and month but not the year. Where that is so, we say it in the note.</p>
 </div></section>
-<script>
-(function(){try{
-var t=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Dar_es_Salaam'}).format(new Date());
-var T=Date.parse(t+'T00:00:00Z');
-document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
- var n=Math.round((Date.parse(r.getAttribute('data-date')+'T00:00:00Z')-T)/864e5);
- if(n<0){r.hidden=true;return}
- var L=r.querySelector('.dl-left');if(L)L.textContent=n===0?'Today':n===1?'1 day left':n+' days left';
-});}catch(e){}})();
-</script>`;
+`;
     addPage('/deadlines/', layout({ title: 'Upcoming deadlines', desc: 'All upcoming scholarship deadlines for African students in one list, with days left. Only dates we confirmed on official pages.', urlPath: '/deadlines/', body: dlBody, active: '/deadlines/' }), 0.9);
   }
 
@@ -775,13 +772,18 @@ document.querySelectorAll('.dl-row[data-date]').forEach(function(r){
       const list = guides.filter((g) => g.category === c);
       if (!list.length) return '';
       return `<h2 class="cat">${esc(c)}</h2>
-    <ol class="path path-wide" start="${guides.indexOf(list[0]) + 1}">
+    <div class="cards cards-g">
       ${list
         .map(
-          (g) => `<li><a href="/guides/${g.slug}/"><span class="path-title">${esc(g.title)}</span><span class="path-sum">${esc(g.summary)}</span><span class="path-meta">${Math.max(1, Math.round(g.words / 200))} min read</span></a></li>`
+          (g) => `<article class="card mcard gcard reveal">
+  <div class="mcard-top"><span class="gnum">Guide ${guides.indexOf(g) + 1}</span><span class="gmin">${Math.max(1, Math.round(g.words / 200))} min read</span></div>
+  <h3><a class="card-link" href="/guides/${g.slug}/">${esc(g.title)}</a></h3>
+  <p class="mdesc">${esc(g.summary)}</p>
+  <div class="mcard-foot"><span class="gcat">${esc(c)}</span><span class="btn btn-sm" aria-hidden="true">Read more ${icon('arrow')}</span></div>
+</article>`
         )
         .join('\n')}
-    </ol>`;
+    </div>`;
     })
     .join('\n')}
 </div></section>`;
@@ -928,7 +930,7 @@ self.addEventListener('fetch', (event) => {
       return res;
     });
 
-  if (req.mode === 'navigate') {
+  if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith(
       caches.match(req, { ignoreSearch: true }).then((cached) => {
         if (cached) { event.waitUntil(refresh().catch(() => {})); return cached; }
